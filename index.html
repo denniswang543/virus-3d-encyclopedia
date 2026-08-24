@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 病毒互動探索百科 | 3D Virus Exploration Lab</title>
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+
+  <!-- 頂部 HUD 導航欄 -->
+  <header class="top-navbar">
+    <div class="brand">
+      <i class="fa-solid fa-virus-covid brand-icon"></i>
+      <div class="brand-text">
+        <h1>3D 病毒互動探索百科</h1>
+        <div class="subtitle">3D VIRUS EXPLORATION LAB & MORPHOLOGY HUD</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-hud highlight" id="btn-compare">
+        <i class="fa-solid fa-code-compare"></i> 雙病毒比對模式
+      </button>
+      <button class="btn-hud" id="btn-screenshot" title="匯出當前視角高解析度 PNG">
+        <i class="fa-solid fa-camera"></i> 3D 截圖
+      </button>
+      <button class="btn-hud" id="btn-toggle-sound">
+        <i class="fa-solid fa-volume-high"></i> 音效
+      </button>
+    </div>
+  </header>
+
+  <!-- 主體應用容器 -->
+  <div class="app-container">
+
+    <!-- 左側病毒選擇清單 -->
+    <aside class="left-sidebar">
+      <div class="sidebar-header">
+        <i class="fa-solid fa-dna"></i> 病毒模型庫 (29款精選模型)
+      </div>
+      <div class="virus-list">
+
+        <!-- 1. SARS-CoV-2 -->
+        <button class="virus-card-btn active" data-virus-id="sars-cov-2">
+          <div class="card-icon" style="color: #ff4757;"><i class="fa-solid fa-virus-covid"></i></div>
+          <div class="card-info">
+            <div class="card-title">新型冠狀病毒</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span>
+              <span class="tag-size">100 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 2. Mpox -->
+        <button class="virus-card-btn" data-virus-id="mpox">
+          <div class="card-icon" style="color: #ffaa00;"><i class="fa-solid fa-cubes"></i></div>
+          <div class="card-info">
+            <div class="card-title">猴痘病毒 (M痘)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">250 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 3. Influenza A -->
+        <button class="virus-card-btn" data-virus-id="influenza-a">
+          <div class="card-icon" style="color: #00d2d3;"><i class="fa-solid fa-snowflake"></i></div>
+          <div class="card-info">
+            <div class="card-title">甲型流感 / H5N1</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">-ssRNA</span>
+              <span class="tag-size">100 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 4. Bacteriophage T4 -->
+        <button class="virus-card-btn" data-virus-id="bacteriophage-t4">
+          <div class="card-icon" style="color: #a55eea;"><i class="fa-solid fa-spider"></i></div>
+          <div class="card-info">
+            <div class="card-title">T4 噬菌體</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">200 nm</span>
+             <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span></div>
+          </div>
+        </button>
+
+        <!-- 5. Ebola -->
+        <button class="virus-card-btn" data-virus-id="ebola">
+          <div class="card-icon" style="color: #eb4d4b;"><i class="fa-solid fa-worm"></i></div>
+          <div class="card-info">
+            <div class="card-title">埃博拉 / 伊波拉</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">-ssRNA</span>
+              <span class="tag-size">970 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 6. Dengue -->
+        <button class="virus-card-btn" data-virus-id="dengue">
+          <div class="card-icon" style="color: #2bcbba;"><i class="fa-solid fa-gem"></i></div>
+          <div class="card-info">
+            <div class="card-title">登革熱病毒</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">50 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 7. Rabies -->
+        <button class="virus-card-btn" data-virus-id="rabies">
+          <div class="card-icon" style="color: #ff6b6b;"><i class="fa-solid fa-capsules"></i></div>
+          <div class="card-info">
+            <div class="card-title">狂犬病毒 (子彈形)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">-ssRNA</span>
+              <span class="tag-size">180 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 8. HIV-1 -->
+        <button class="virus-card-btn" data-virus-id="hiv-1">
+          <div class="card-icon" style="color: #10ac84;"><i class="fa-solid fa-shield-virus"></i></div>
+          <div class="card-info">
+            <div class="card-title">愛滋病毒 (HIV-1)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">ssRNA-RT</span>
+              <span class="tag-size">120 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 9. HBV -->
+        <button class="virus-card-btn" data-virus-id="hbv">
+          <div class="card-icon" style="color: #ffda79;"><i class="fa-solid fa-virus"></i></div>
+          <div class="card-info">
+            <div class="card-title">B 型肝炎病毒 (HBV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">rcDNA</span>
+              <span class="tag-size">42 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 10. Zika -->
+        <button class="virus-card-btn" data-virus-id="zika">
+          <div class="card-icon" style="color: #cd6133;"><i class="fa-solid fa-gem"></i></div>
+          <div class="card-info">
+            <div class="card-title">茲卡病毒 (Zika)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">50 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 11. Rotavirus -->
+        <button class="virus-card-btn" data-virus-id="rotavirus">
+          <div class="card-icon" style="color: #34ace0;"><i class="fa-solid fa-dharmachakra"></i></div>
+          <div class="card-info">
+            <div class="card-title">輪狀病毒 (Rotavirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">dsRNA</span>
+              <span class="tag-size">75 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 12. HSV -->
+        <button class="virus-card-btn" data-virus-id="hsv">
+          <div class="card-icon" style="color: #ff5252;"><i class="fa-solid fa-certificate"></i></div>
+          <div class="card-info">
+            <div class="card-title">單純皰疹病毒 (HSV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">200 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 13. Norovirus -->
+        <button class="virus-card-btn" data-virus-id="norovirus">
+          <div class="card-icon" style="color: #706fd3;"><i class="fa-solid fa-bowling-ball"></i></div>
+          <div class="card-info">
+            <div class="card-title">諾羅病毒 (Norovirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">38 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 14. HPV -->
+        <button class="virus-card-btn" data-virus-id="hpv">
+          <div class="card-icon" style="color: #33d9b2;"><i class="fa-solid fa-sun"></i></div>
+          <div class="card-info">
+            <div class="card-title">人類乳突病毒 (HPV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">55 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 15. Measles -->
+        <button class="virus-card-btn" data-virus-id="measles">
+          <div class="card-icon" style="color: #ff793f;"><i class="fa-solid fa-head-side-cough"></i></div>
+          <div class="card-info">
+            <div class="card-title">麻疹病毒 (Measles)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">-ssRNA</span>
+              <span class="tag-size">150 nm</span>
+            </div>
+          </div>
+        </button>
+
+      
+        
+
+        <!-- 16. Mimivirus -->
+        <button class="virus-card-btn" data-virus-id="mimivirus">
+          <div class="card-icon" style="color: #686de0;"><i class="fa-brands fa-galactic-senate"></i></div>
+          <div class="card-info">
+            <div class="card-title">米米病毒 (Mimivirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">750 nm</span>
+             <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span></div>
+          </div>
+        </button>
+
+        <!-- 17. Pithovirus -->
+        <button class="virus-card-btn" data-virus-id="pithovirus">
+          <div class="card-icon" style="color: #f0932b;"><i class="fa-solid fa-jar"></i></div>
+          <div class="card-info">
+            <div class="card-title">闊口罐病毒 (Pithovirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">1500 nm</span>
+             <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span></div>
+          </div>
+        </button>
+
+        <!-- 18. Tupanvirus -->
+        <button class="virus-card-btn" data-virus-id="tupanvirus">
+          <div class="card-icon" style="color: #eb4d4b;"><i class="fa-solid fa-meteor"></i></div>
+          <div class="card-info">
+            <div class="card-title">圖潘病毒 (Tupanvirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">1200 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 19. ATV -->
+        <button class="virus-card-btn" data-virus-id="atv">
+          <div class="card-icon" style="color: #f9ca24;"><i class="fa-solid fa-lemon"></i></div>
+          <div class="card-info">
+            <div class="card-title">雙尾紡錘病毒 (ATV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">140 nm</span>
+             <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span></div>
+          </div>
+        </button>
+
+        <!-- 20. Geminivirus -->
+        <button class="virus-card-btn" data-virus-id="geminivirus">
+          <div class="card-icon" style="color: #6ab04c;"><i class="fa-solid fa-capsules"></i></div>
+          <div class="card-info">
+            <div class="card-title">雙子星病毒 (Geminivirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">ssDNA</span>
+              <span class="tag-size">30 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 21. TMV -->
+        <button class="virus-card-btn" data-virus-id="tmv">
+          <div class="card-icon" style="color: #badc58;"><i class="fa-solid fa-lines-leaning"></i></div>
+          <div class="card-info">
+            <div class="card-title">菸草鑲嵌病毒 (TMV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">300 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 22. M13 Phage -->
+        <button class="virus-card-btn" data-virus-id="m13">
+          <div class="card-icon" style="color: #c7ecee;"><i class="fa-solid fa-worm"></i></div>
+          <div class="card-info">
+            <div class="card-title">M13 噬菌體</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">ssDNA</span>
+              <span class="tag-size">900 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 23. ACV -->
+        <button class="virus-card-btn" data-virus-id="acv">
+          <div class="card-icon" style="color: #ffbe76;"><i class="fa-solid fa-tornado"></i></div>
+          <div class="card-info">
+            <div class="card-title">彈簧病毒 (ACV)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">ssDNA</span>
+              <span class="tag-size">230 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 24. Guttavirus -->
+        <button class="virus-card-btn" data-virus-id="guttavirus">
+          <div class="card-icon" style="color: #7ed6df;"><i class="fa-solid fa-droplet"></i></div>
+          <div class="card-info">
+            <div class="card-title">淚滴形病毒 (Guttavirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">110 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 25. Astrovirus -->
+        <button class="virus-card-btn" data-virus-id="astrovirus">
+          <div class="card-icon" style="color: #e056fd;"><i class="fa-solid fa-star"></i></div>
+          <div class="card-info">
+            <div class="card-title">星狀病毒 (Astrovirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">35 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 26. Baculovirus -->
+        <button class="virus-card-btn" data-virus-id="baculovirus">
+          <div class="card-icon" style="color: #4834d4;"><i class="fa-solid fa-hotdog"></i></div>
+          <div class="card-info">
+            <div class="card-title">桿狀病毒 (Baculovirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">300 nm</span>
+             <span class="tag-badge" style="background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid #2ecc71;"><i class="fa-solid fa-play"></i> 動畫</span></div>
+          </div>
+        </button>
+
+        <!-- 27. Orf Virus -->
+        <button class="virus-card-btn" data-virus-id="orf">
+          <div class="card-icon" style="color: #ff7979;"><i class="fa-solid fa-yarn"></i></div>
+          <div class="card-info">
+            <div class="card-title">羊痘病毒 (Orf Virus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">260 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 28. Phi29 -->
+        <button class="virus-card-btn" data-virus-id="phi29">
+          <div class="card-icon" style="color: #30336b;"><i class="fa-solid fa-robot"></i></div>
+          <div class="card-info">
+            <div class="card-title">Phi29 噬菌體</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">dsDNA</span>
+              <span class="tag-size">80 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 29. Phi X 174 -->
+        <button class="virus-card-btn" data-virus-id="phix174">
+          <div class="card-icon" style="color: #535c68;"><i class="fa-solid fa-sun-plant-wilt"></i></div>
+          <div class="card-info">
+            <div class="card-title">刺錘噬菌體 (Phi X 174)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-dna">ssDNA</span>
+              <span class="tag-size">30 nm</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 30. Torovirus -->
+        <button class="virus-card-btn" data-virus-id="torovirus">
+          <div class="card-icon" style="color: #f6e58d;"><i class="fa-solid fa-ring"></i></div>
+          <div class="card-info">
+            <div class="card-title">環曲病毒 (Torovirus)</div>
+            <div class="card-meta">
+              <span class="tag-badge tag-rna">+ssRNA</span>
+              <span class="tag-size">140 nm</span>
+            </div>
+          </div>
+        </button>
+</div>
+    </aside>
+
+    <!-- 中央 3D 視圖區域 -->
+    <main class="viewport-wrapper">
+      
+      <!-- 提示條 -->
+      <div class="hint-overlay">
+        <i class="fa-solid fa-mouse"></i> 滑鼠左鍵拖曳 360° 旋轉 ｜ 滾輪放大/縮小 ｜ 右鍵平移 ｜ 點擊結構標籤深度探勘
+      </div>
+
+      <!-- 3D WebGL Canvas 容器 -->
+      <div id="canvas-container"></div>
+
+      <!-- 3D 標籤懸浮圖層 -->
+      <div id="hotspot-overlay"></div>
+
+      <!-- 點擊標籤彈出之特寫詳情卡片 -->
+      <div id="hotspot-detail-card" class="hotspot-detail-card hidden">
+        <div class="card-header">
+          <h3 id="hotspot-card-title">結構特寫標題</h3>
+          <button class="btn-close-card" id="close-hotspot-card"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p class="card-desc" id="hotspot-card-desc">結構醫學解說內容...</p>
+      </div>
+
+      <!-- 底部浮動控制面板 (Dock) -->
+      <div class="bottom-dock">
+        <!-- 檢視模式切換 -->
+        <div class="dock-group">
+          <button class="mode-btn active" data-mode="surface" title="擬真表面外觀">
+            <i class="fa-solid fa-globe"></i> 外觀全貌
+          </button>
+          <button class="mode-btn" data-mode="cutaway" title="切開外殼透視內部遺傳物質與衣殼">
+            <i class="fa-solid fa-circle-half-stroke"></i> 剖面透視
+          </button>
+          <button class="mode-btn" data-mode="hologram" title="全息透光晶格線框">
+            <i class="fa-solid fa-cubes-stacked"></i> 全息透光
+          </button>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- 動畫控制 -->
+        <div class="dock-group">
+          <button class="mode-btn" id="btn-anim" title="播放感染過程動畫">
+            <i class="fa-solid fa-play"></i> 播放動畫
+          </button>
+          <button class="mode-btn" id="btn-anim-stop" title="停止動畫" style="display:none; color: #ff4d4d; border-color: #ff4d4d;">
+            <i class="fa-solid fa-stop"></i> 停止
+          </button>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- 視角快捷 -->
+        <div class="dock-group">
+          <button class="dock-tool-btn" data-cam="front" title="正面視角"><i class="fa-solid fa-eye"></i></button>
+          <button class="dock-tool-btn" data-cam="top" title="俯視頂部"><i class="fa-solid fa-arrow-down"></i></button>
+          <button class="dock-tool-btn" data-cam="side" title="側視圖"><i class="fa-solid fa-arrow-right"></i></button>
+          <button class="dock-tool-btn" data-cam="close" title="微距特寫"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+          <button class="dock-tool-btn" id="btn-reset-cam" title="重置視角"><i class="fa-solid fa-rotate-left"></i></button>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- 輔助開關 -->
+        <div class="dock-group">
+          <button class="dock-tool-btn active" id="btn-toggle-rotate" title="開關 360° 自動自轉"><i class="fa-solid fa-arrows-rotate"></i></button>
+          <button class="dock-tool-btn active" id="btn-toggle-labels" title="開關 3D 結構錨點標籤"><i class="fa-solid fa-tags"></i></button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 右側生醫數據儀表板 (Right Bio-HUD) -->
+    <aside class="right-sidebar">
+      
+      <div class="hud-header">
+        <div class="hud-title-row">
+          <span class="hud-title-ch" id="virus-name-ch">新型冠狀病毒</span>
+          <span class="hud-title-en" id="virus-name-en">SARS-CoV-2</span>
+        </div>
+        <div class="hud-scientific" id="virus-scientific">Severe acute respiratory syndrome coronavirus 2</div>
+        <div class="hud-family" id="virus-family" style="font-size: 11px; color: var(--accent-cyan); margin-top: 3px;">冠狀病毒科 (Coronaviridae)</div>
+      </div>
+
+      <!-- 核心生化指標 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-chart-simple"></i> 生物物理與流行病學指標</div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-name">顆粒物理直徑</div>
+            <div class="metric-val" id="virus-size">約 100 nm</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">基本傳染數 (R0)</div>
+            <div class="metric-val" id="virus-r0">2.5 - 5.0 / 18</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">基因組類型</div>
+            <div class="metric-val" id="virus-category">+ssRNA</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">平均病死率</div>
+            <div class="metric-val" id="virus-fatality">0.1% - 3.4%</div>
+          </div>
+          <div class="metric-card full-width">
+            <div class="metric-name">主要宿主受體 (Receptor)</div>
+            <div class="metric-val" id="virus-receptor" style="color: var(--accent-cyan);">ACE2</div>
+          </div>
+          <div class="metric-card full-width">
+            <div class="metric-name">潛伏期</div>
+            <div class="metric-val" id="virus-incubation">2 - 14 天</div>
+          </div>
+          <div class="metric-card full-width">
+            <div class="metric-name">主要傳播途徑</div>
+            <div class="metric-val" id="virus-trans">飛沫傳播、氣溶膠、近距離接觸</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 臨床症狀 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-head-side-cough"></i> 常見臨床症狀 (Symptoms)</div>
+        <p class="text-desc" id="virus-symptoms" style="color: var(--accent-red); font-weight: bold;">發燒、乾咳、疲勞、失去味覺/嗅覺、呼吸困難。</p>
+      </div>
+
+      <!-- 病毒概述 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-book-medical"></i> 病毒概述與形態學</div>
+        <p class="text-desc" id="virus-desc">病毒詳細描述內容...</p>
+      </div>
+
+      <!-- 關鍵結構解剖導航 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-crosshairs"></i> 3D 結構特寫導航</div>
+        <div class="structure-nav-grid" id="structure-nav-list">
+          <!-- 動態生成結構按鈕 -->
+        </div>
+      </div>
+
+      <!-- 關鍵解剖特徵列表 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-microscope"></i> 解剖特徵機理</div>
+        <ul class="features-list" id="virus-features">
+          <!-- 動態生成特徵清單 -->
+        </ul>
+      </div>
+
+      <!-- 疫苗與臨床治療現狀 -->
+      <div class="hud-section">
+        <div class="section-label"><i class="fa-solid fa-syringe"></i> 疫苗研發與治療現狀</div>
+        <p class="text-desc" id="virus-clinical">臨床與治療資訊...</p>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- 雙病毒比對彈出視窗 (Comparison Modal) -->
+  <div id="comparison-modal" class="modal-overlay hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-code-compare"></i> 雙病毒 3D 尺寸比例與特性同屏比對</h2>
+        <button class="btn-close-modal" id="close-comparison"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- 左側病毒比對區 -->
+        <div class="comp-split-col">
+          <div class="comp-selector">
+            <select id="select-comp-a" class="comp-select-dropdown">
+              <option value="sars-cov-2" selected>SARS-CoV-2 (新冠病毒)</option>
+              <option value="mpox">Mpox (猴痘病毒)</option>
+              <option value="influenza-a">Influenza A (甲型流感)</option>
+              <option value="bacteriophage-t4">Bacteriophage T4 (噬菌體)</option>
+              <option value="ebola">Ebola (埃博拉病毒)</option>
+              <option value="dengue">Dengue (登革熱病毒)</option>
+              <option value="rabies">Rabies (狂犬病毒)</option>
+              <option value="hiv-1">HIV-1 (愛滋病毒)</option>
+              <option value="hbv">HBV (B型肝炎病毒)</option>
+              <option value="zika">Zika (茲卡病毒)</option>
+              <option value="rotavirus">Rotavirus (輪狀病毒)</option>
+              <option value="hsv">HSV (單純皰疹病毒)</option>
+              <option value="norovirus">Norovirus (諾羅病毒)</option>
+              <option value="hpv">HPV (人類乳突病毒)</option>
+              <option value="measles">Measles (麻疹病毒)</option>
+            
+              
+
+              <option value="mimivirus">Mimivirus (米米病毒)</option>
+              <option value="pithovirus">Pithovirus (闊口罐病毒)</option>
+              <option value="tupanvirus">Tupanvirus (圖潘病毒)</option>
+              <option value="atv">ATV (雙尾紡錘病毒)</option>
+              <option value="geminivirus">Geminivirus (雙子星病毒)</option>
+              <option value="tmv">TMV (菸草鑲嵌病毒)</option>
+              <option value="m13">M13 Phage (M13 噬菌體)</option>
+              <option value="acv">ACV (彈簧病毒)</option>
+              <option value="guttavirus">Guttavirus (淚滴形病毒)</option>
+              <option value="astrovirus">Astrovirus (星狀病毒)</option>
+              <option value="baculovirus">Baculovirus (桿狀病毒)</option>
+              <option value="orf">Orf Virus (羊痘病毒)</option>
+              <option value="phi29">Phi29 Phage (Phi29 噬菌體)</option>
+              <option value="phix174">Phi X 174 (刺錘噬菌體)</option>
+              <option value="torovirus">Torovirus (環曲病毒)</option>
+</select>
+          </div>
+          <div class="comp-3d-viewport" id="comp-canvas-a"></div>
+          <div class="comp-data-table">
+            <div class="comp-data-row"><span class="comp-row-label">病毒名稱</span><span class="comp-row-val" id="comp-a-title"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">物理直徑 (奈米比例)</span><span class="comp-row-val" id="comp-a-size" style="color: var(--accent-cyan);"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">基因組型</span><span class="comp-row-val" id="comp-a-category"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">宿主受體</span><span class="comp-row-val" id="comp-a-receptor"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">傳播指數 (R0)</span><span class="comp-row-val" id="comp-a-r0"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">致死率</span><span class="comp-row-val" id="comp-a-fatality"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">傳播途徑</span><span class="comp-row-val" id="comp-a-trans"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">臨床症狀</span><span class="comp-row-val" id="comp-a-symptoms" style="color: var(--accent-red); font-size: 0.85rem;"></span></div>
+          </div>
+        </div>
+
+        <!-- 右側病毒比對區 -->
+        <div class="comp-split-col">
+          <div class="comp-selector">
+            <select id="select-comp-b" class="comp-select-dropdown">
+              <option value="sars-cov-2">SARS-CoV-2 (新冠病毒)</option>
+              <option value="mpox" selected>Mpox (猴痘病毒)</option>
+              <option value="influenza-a">Influenza A (甲型流感)</option>
+              <option value="bacteriophage-t4">Bacteriophage T4 (噬菌體)</option>
+              <option value="ebola">Ebola (埃博拉病毒)</option>
+              <option value="dengue">Dengue (登革熱病毒)</option>
+              <option value="rabies">Rabies (狂犬病毒)</option>
+              <option value="hiv-1">HIV-1 (愛滋病毒)</option>
+              <option value="hbv">HBV (B型肝炎病毒)</option>
+              <option value="zika">Zika (茲卡病毒)</option>
+              <option value="rotavirus">Rotavirus (輪狀病毒)</option>
+              <option value="hsv">HSV (單純皰疹病毒)</option>
+              <option value="norovirus">Norovirus (諾羅病毒)</option>
+              <option value="hpv">HPV (人類乳突病毒)</option>
+              <option value="measles">Measles (麻疹病毒)</option>
+            
+              
+
+              <option value="mimivirus">Mimivirus (米米病毒)</option>
+              <option value="pithovirus">Pithovirus (闊口罐病毒)</option>
+              <option value="tupanvirus">Tupanvirus (圖潘病毒)</option>
+              <option value="atv">ATV (雙尾紡錘病毒)</option>
+              <option value="geminivirus">Geminivirus (雙子星病毒)</option>
+              <option value="tmv">TMV (菸草鑲嵌病毒)</option>
+              <option value="m13">M13 Phage (M13 噬菌體)</option>
+              <option value="acv">ACV (彈簧病毒)</option>
+              <option value="guttavirus">Guttavirus (淚滴形病毒)</option>
+              <option value="astrovirus">Astrovirus (星狀病毒)</option>
+              <option value="baculovirus">Baculovirus (桿狀病毒)</option>
+              <option value="orf">Orf Virus (羊痘病毒)</option>
+              <option value="phi29">Phi29 Phage (Phi29 噬菌體)</option>
+              <option value="phix174">Phi X 174 (刺錘噬菌體)</option>
+              <option value="torovirus">Torovirus (環曲病毒)</option>
+</select>
+          </div>
+          <div class="comp-3d-viewport" id="comp-canvas-b"></div>
+          <div class="comp-data-table">
+            <div class="comp-data-row"><span class="comp-row-label">病毒名稱</span><span class="comp-row-val" id="comp-b-title"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">物理直徑 (奈米比例)</span><span class="comp-row-val" id="comp-b-size" style="color: var(--accent-amber);"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">基因組型</span><span class="comp-row-val" id="comp-b-category"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">宿主受體</span><span class="comp-row-val" id="comp-b-receptor"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">傳播指數 (R0)</span><span class="comp-row-val" id="comp-b-r0"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">致死率</span><span class="comp-row-val" id="comp-b-fatality"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">傳播途徑</span><span class="comp-row-val" id="comp-b-trans"></span></div>
+            <div class="comp-data-row"><span class="comp-row-label">臨床症狀</span><span class="comp-row-val" id="comp-b-symptoms" style="color: var(--accent-red); font-size: 0.85rem;"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js & OrbitControls from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="js/ARButton.js?v=3"></script>
+
+  <!-- Application Scripts -->
+  <script src="js/virusData.js"></script>
+  <script src="js/virusModels.js"></script>\n  <script src="js/virusAnimations.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/comparison.js"></script>
+  <script src="js/main.js?v=11"></script>
+
+</body>
+</html>
