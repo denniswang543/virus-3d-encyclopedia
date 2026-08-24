@@ -84,7 +84,7 @@
         message.style.display = 'block';
         message.style.padding = '20px';
         message.style.background = 'red';
-        message.innerHTML = 'HTTPS REQUIRED FOR AR';
+        message.innerHTML = '⚠️ 內建瀏覽器不支援 AR<br>請改用 Chrome 開啟';
         message.style.zIndex = '999999';
 
         stylizeElement(message);
