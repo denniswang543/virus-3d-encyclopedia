@@ -236,7 +236,7 @@ class VirusApp {
         this.currentModelGroup.traverse((child) => {
           if (child.isMesh && child.material && child.material.color) {
             // Check if it's the spike head (orange-ish) or stalk (red-ish)
-            if (child.material.color.getHex() === 0xf39c12 || child.material.color.getHex() === 0xd35400) {
+            if (typeof child.material.color.getHex === 'function' && (child.material.color.getHex() === 0xf39c12 || child.material.color.getHex() === 0xd35400)) {
               child.material.emissive = child.material.color;
               child.material.emissiveIntensity = 0.6; // Glow!
             }
