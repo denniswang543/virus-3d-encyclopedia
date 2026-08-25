@@ -86,7 +86,7 @@ class VirusApp {
     this.renderer.xr.enabled = true;
     if (window.THREE && THREE.ARButton) {
       const arBtn = THREE.ARButton.createButton(this.renderer, { requiredFeatures: ['hit-test'] });
-      document.body.appendChild(arBtn);
+      document.querySelector('.viewport-wrapper').appendChild(arBtn);
       
       this.renderer.xr.addEventListener('sessionstart', () => {
         // Fix for black screen in AR: remove background color and fog

@@ -878,36 +878,39 @@ body {
     white-space: nowrap;
   }
   
-  #ARButton {
-    bottom: calc(30dvh + 70px) !important;
-    z-index: 999999 !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    padding: 10px 20px !important;
-    font-size: 14px !important;
-    text-align: center !important;
-    background: var(--accent-cyan) !important;
-    color: #000 !important;
-    border-radius: 20px !important;
-    width: max-content !important;
-    max-width: 90vw !important;
-  }
+  
 }
 
-/* Hide AR button on desktop */
-@media (min-width: 769px) {
-  #ARButton {
-    bottom: calc(30dvh + 70px) !important;
-    z-index: 999999 !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    padding: 10px 20px !important;
-    font-size: 14px !important;
-    text-align: center !important;
-    background: var(--accent-cyan) !important;
-    color: #000 !important;
-    border-radius: 20px !important;
-    width: max-content !important;
-    max-width: 90vw !important;
-  }
+
+
+/* AR Button Styling */
+#ARButton {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: 999999 !important;
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  background: var(--accent-cyan) !important;
+  color: #000 !important;
+  border-radius: 20px !important;
+  width: max-content !important;
+  max-width: 90vw !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+}
+
+/* Device-specific Visibility Rules */
+@media (pointer: fine) {
+  /* Hide AR button on devices with a mouse (Desktop/Laptop) */
+  #ARButton { display: none !important; }
+}
+
+@media (hover: none) {
+  /* Hide mouse instructions on touch devices (Mobile/Tablet) */
+  .hint-overlay { display: none !important; }
 }
