@@ -45,7 +45,6 @@ class VirusApp {
       this.setupEvents();
       this.setupScene();
       this.setupLights();
-      this.setupPostProcessing();
       this.setupBackgroundParticles();
       this.loadVirus(this.currentVirusId, this.currentMode);
       if (window.ComparisonEngine) {
@@ -79,7 +78,6 @@ class VirusApp {
       powerPreference: "high-performance"
     });
     this.renderer.setSize(width, height);
-      if (this.composer) this.composer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.1;
@@ -227,27 +225,7 @@ class VirusApp {
     }
 
     // 建立 3D 結構標籤熱點
-    
-    // Enable Bloom and glowing materials for SARS-CoV-2
-    if (this.composer) {
-      if (virusId === "sars-cov-2") {
-        this.enableBloom = true;
-        // Make spikes glow!
-        this.currentModelGroup.traverse((child) => {
-          if (child.isMesh && child.material && child.material.color) {
-            // Check if it's the spike head (orange-ish) or stalk (red-ish)
-            if (typeof child.material.color.getHex === 'function' && (child.material.color.getHex() === 0xf39c12 || child.material.color.getHex() === 0xd35400)) {
-              child.material.emissive = child.material.color;
-              child.material.emissiveIntensity = 0.6; // Glow!
-            }
-          }
-        });
-      } else {
-        this.enableBloom = false;
-      }
-    }
-
-      this.createHotspotMarkers();
+    this.createHotspotMarkers();
 
     // 更新資訊面板
     this.updateInfoPanel();
@@ -446,15 +424,7 @@ class VirusApp {
   exportScreenshot() {
     if (window.soundEngine) window.soundEngine.playClick();
     if (this.renderer && this.scene && this.camera) {
-      
-      if (this.renderer.xr.isPresenting) {
-        this.renderer.render(this.scene, this.camera);
-      } else if (this.composer && this.enableBloom) {
-        this.composer.render();
-      } else {
-        this.renderer.render(this.scene, this.camera);
-      }
-
+      this.renderer.render(this.scene, this.camera);
       const dataUrl = this.renderer.domElement.toDataURL("image/png");
       const link = document.createElement("a");
       link.download = `virus-3d-${this.currentVirusId}-${Date.now()}.png`;
@@ -471,7 +441,6 @@ class VirusApp {
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(width, height);
-      if (this.composer) this.composer.setSize(width, height);
       if (this.comparisonEngine) this.comparisonEngine.handleResize();
     });
 
@@ -644,15 +613,7 @@ class VirusApp {
     if (this.controls) this.controls.update();
     this.updateHotspotPositions();
     if (this.renderer && this.scene && this.camera) {
-      
-      if (this.renderer.xr.isPresenting) {
-        this.renderer.render(this.scene, this.camera);
-      } else if (this.composer && this.enableBloom) {
-        this.composer.render();
-      } else {
-        this.renderer.render(this.scene, this.camera);
-      }
-
+      this.renderer.render(this.scene, this.camera);
     }
   }
 }
