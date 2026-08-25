@@ -27,7 +27,7 @@
 
 body {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background-color: var(--bg-dark);
   color: var(--text-main);
@@ -128,7 +128,7 @@ body {
 .app-container {
   display: flex;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   padding-top: 60px;
   position: relative;
 }
@@ -364,25 +364,26 @@ body {
 
 /* 底部浮動控制面板 (Floating Bottom Dock) */
 .bottom-dock {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--bg-panel);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  z-index: 40;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  flex-wrap: nowrap;
-  width: max-content;
-  max-width: 95vw;
-  overflow-x: auto;
-  white-space: nowrap;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 40;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    flex-wrap: nowrap;
+    width: max-content;
+    max-width: 96%; /* ensure it doesn't spill out of viewport-wrapper */
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
 }
 
 .bottom-dock::-webkit-scrollbar {
@@ -618,7 +619,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background: rgba(7, 9, 19, 0.92);
   backdrop-filter: blur(20px);
   z-index: 200;
@@ -913,4 +914,15 @@ body {
 @media (hover: none) {
   /* Hide mouse instructions on touch devices (Mobile/Tablet) */
   .hint-overlay { display: none !important; }
+}
+
+/* Mobile Landscape Fixes */
+@media (max-height: 500px) and (orientation: landscape) {
+  .top-navbar { height: 45px; padding: 0 10px; }
+  .app-container { padding-top: 45px; }
+  .bottom-dock { bottom: 10px; padding: 4px 10px; gap: 8px; }
+  .mode-btn { font-size: 10px; padding: 4px 8px; }
+  .dock-tool-btn { width: 30px; height: 30px; font-size: 12px; }
+  .left-sidebar { width: 200px; }
+  .right-sidebar { width: 250px; }
 }
