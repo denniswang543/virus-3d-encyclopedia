@@ -954,54 +954,102 @@ const VirusBuilder = {
   },
 
   // 11. Rotavirus
-  buildRotavirus(mode = "surface") {
+    buildRotavirus(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
-    // Outer Capsid (VP7)
+    // Outer Capsid (VP7) - Upgraded to look like the classic artistic green cratered sphere
     const radius = 3;
-    const vp7Geo = isCutaway ? new THREE.SphereGeometry(radius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.SphereGeometry(radius, 48, 48);
+    const vp7Geo = isCutaway ? new THREE.SphereGeometry(radius, 64, 64, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.IcosahedronGeometry(radius, 12);
+    
+    // Perturb vertices to create a bumpy/cratered surface
+    if (!isCutaway && !isHologram && vp7Geo.attributes.position) {
+      const pos = vp7Geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        // Simple procedural noise for bumps
+        const noise = Math.sin(v.x * 5) * Math.cos(v.y * 5) * Math.sin(v.z * 5);
+        // Depress the areas where spikes might be to form craters, or just make it globally bumpy
+        v.addScaledVector(v.clone().normalize(), noise * 0.15);
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      vp7Geo.computeVertexNormals();
+    }
+
     const vp7Mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true, transparent: true, opacity: 0.4 })
-                              : this.createBiomaterial(0x74b9ff, 0.8, 0.1);
+                              : new THREE.MeshStandardMaterial({ color: 0x4cd137, roughness: 0.7, bumpScale: 0.2, side: THREE.DoubleSide });
     const vp7 = new THREE.Mesh(vp7Geo, vp7Mat);
     group.add(vp7);
 
-    // Spikes (VP4)
+    // Spikes (VP4) - Upgraded to funnel/cup shape
     if (!isHologram) {
-      const spikeGeo = new THREE.CylinderGeometry(0.05, 0.1, 0.8, 8);
-      const spikeMat = this.createBiomaterial(0xd63031, 0.4, 0.1);
+      // Compound spike geometry: base stalk + cup
+      const spikeGroup = new THREE.Group();
+      
+      const stalkGeo = new THREE.CylinderGeometry(0.08, 0.1, 0.6, 8);
+      const cupGeo = new THREE.CylinderGeometry(0.3, 0.08, 0.3, 16, 1, true); // Open ended cone
+      const cupInnerGeo = new THREE.CylinderGeometry(0.25, 0.05, 0.3, 16, 1, true); // Inner wall to give thickness
+      const lipGeo = new THREE.TorusGeometry(0.3, 0.03, 8, 16); // Rim of the cup
+
+      const spikeMat = new THREE.MeshStandardMaterial({ color: 0xff6b81, roughness: 0.5, side: THREE.DoubleSide });
+      const innerMat = new THREE.MeshStandardMaterial({ color: 0xc23616, roughness: 0.8, side: THREE.DoubleSide }); // Darker inside
+      
+      const stalk = new THREE.Mesh(stalkGeo, spikeMat);
+      stalk.position.y = 0.3; // Half of stalk height
+      
+      const cup = new THREE.Mesh(cupGeo, spikeMat);
+      cup.position.y = 0.6 + 0.15; // Above stalk
+      
+      const cupInner = new THREE.Mesh(cupInnerGeo, innerMat);
+      cupInner.position.y = 0.6 + 0.14; // Slightly lower inner wall
+      
+      const lip = new THREE.Mesh(lipGeo, spikeMat);
+      lip.position.y = 0.6 + 0.3; // Top of the cup
+      lip.rotation.x = Math.PI / 2;
+
+      spikeGroup.add(stalk);
+      spikeGroup.add(cup);
+      spikeGroup.add(cupInner);
+      spikeGroup.add(lip);
+
       const spikeCount = 60;
-      const phi = Math.PI * (3 - Math.sqrt(5));
       for (let i = 0; i < spikeCount; i++) {
         const y = 1 - (i / (spikeCount - 1)) * 2;
-        if (isCutaway && y < -0.2) continue;
-        const tempRadius = Math.sqrt(1 - y * y);
-        const theta = phi * i;
-        const x = Math.cos(theta) * tempRadius;
-        const z = Math.sin(theta) * tempRadius;
+        if (isCutaway && y < -0.1) continue;
+        const tempR = Math.sqrt(1 - y*y);
+        const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+        const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
         
-        const spike = new THREE.Mesh(spikeGeo, spikeMat);
-        const norm = new THREE.Vector3(x, y, z).normalize();
-        spike.position.copy(norm).multiplyScalar(radius + 0.3);
-        const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), norm);
-        spike.quaternion.copy(quaternion);
+        const spike = spikeGroup.clone();
+        // Position at surface, embedded slightly
+        spike.position.copy(norm).multiplyScalar(radius - 0.2);
+        spike.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), norm);
         group.add(spike);
       }
     }
 
-    // Inner Capsid (VP6/VP2)
+    // Inner Core (VP6 & VP2)
     if (isCutaway || isHologram) {
-      const innerGeo = new THREE.IcosahedronGeometry(2.2, 2);
-      const innerMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x00cec9, wireframe: true })
-                                  : this.createBiomaterial(0x81ecec, 0.6, 0.2);
-      const inner = new THREE.Mesh(innerGeo, innerMat);
-      group.add(inner);
+      const vp6Geo = new THREE.IcosahedronGeometry(2.3, 2);
+      const vp6Mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xfdcb6e, wireframe: true, transparent: true, opacity: 0.2 })
+                                : this.createBiomaterial(0xf1c40f, 0.9, 0, true, 0.7);
+      group.add(new THREE.Mesh(vp6Geo, vp6Mat));
+
+      // 11 segments of dsRNA
+      const rnaMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xff7675 })
+                                : this.createBiomaterial(0xe84118, 0.5, 0);
+      for (let i = 0; i < 11; i++) {
+        const rnaGeo = new THREE.TorusKnotGeometry(0.8 + Math.random()*0.3, 0.08, 64, 8, 2, 3);
+        const rna = new THREE.Mesh(rnaGeo, rnaMat);
+        rna.position.set((Math.random()-0.5)*1.5, (Math.random()-0.5)*1.5, (Math.random()-0.5)*1.5);
+        rna.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+        group.add(rna);
+      }
     }
     return group;
   },
 
-  // 12. HSV
   buildHSV(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
@@ -1018,7 +1066,7 @@ const VirusBuilder = {
     // Spikes
     if (!isHologram) {
       const spikeGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.4, 8);
-      const spikeMat = this.createBiomaterial(0x2d3436, 0.5, 0.1);
+      const spikeMat = this.createBiomaterial(0x9b59b6, 0.5, 0.1); // Purple spikes for HSV
       for(let i=0; i<100; i++) {
         const y = 1 - (i / 99) * 2;
         if (isCutaway && y < -0.2) continue;
@@ -1078,41 +1126,85 @@ const VirusBuilder = {
   },
 
   // 14. HPV
-  buildHPV(mode = "surface") {
+    buildHPV(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
     const radius = 2.8;
-    const geo = isCutaway ? new THREE.SphereGeometry(radius, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.IcosahedronGeometry(radius, 3);
-    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x00b894, wireframe: true })
-                           : this.createBiomaterial(0x55efc4, 0.8, 0.1);
+    // Base blue sphere
+    const geo = isCutaway ? new THREE.SphereGeometry(radius, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.IcosahedronGeometry(radius, 4);
     
-    if (!isHologram && !isCutaway) {
+    // Perturb vertices to create a bumpy/golf-ball-like base for capsomeres
+    if (!isHologram && !isCutaway && geo.attributes.position) {
       const pos = geo.attributes.position;
       for (let i = 0; i < pos.count; i++) {
-        const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-        v.normalize().multiplyScalar(radius + Math.abs(Math.sin(v.x*8)*Math.sin(v.y*8))*0.2);
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        // high frequency noise
+        const noise = Math.sin(v.x*10)*Math.sin(v.y*10)*Math.sin(v.z*10);
+        v.addScaledVector(v.clone().normalize(), noise*0.05);
         pos.setXYZ(i, v.x, v.y, v.z);
       }
       geo.computeVertexNormals();
     }
-    
+
+    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true })
+                           : new THREE.MeshStandardMaterial({ color: 0x0984e3, roughness: 0.6, bumpScale: 0.1 });
     const cap = new THREE.Mesh(geo, mat);
     group.add(cap);
 
-    if (isCutaway || isHologram) {
-       const dnaGeo = new THREE.TorusGeometry(1, 0.1, 16, 50);
-       const dnaMat = new THREE.MeshBasicMaterial({ color: 0xd63031 });
-       const dna = new THREE.Mesh(dnaGeo, dnaMat);
-       dna.rotation.x = Math.PI / 4;
-       dna.rotation.y = Math.PI / 4;
-       group.add(dna);
+    // Add yellow star-shaped capsomeres (L1 pentamers)
+    if (!isHologram) {
+      // Star geometry
+      const starShape = new THREE.Shape();
+      const outerR = 0.35;
+      const innerR = 0.15;
+      const points = 5;
+      for (let i = 0; i < points * 2; i++) {
+        const r = (i % 2 === 0) ? outerR : innerR;
+        const a = (i / (points * 2)) * Math.PI * 2;
+        if (i === 0) starShape.moveTo(Math.cos(a)*r, Math.sin(a)*r);
+        else starShape.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      }
+      
+      const extrudeSettings = { depth: 0.15, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 };
+      const starGeo = new THREE.ExtrudeGeometry(starShape, extrudeSettings);
+      
+      // Center geometry
+      starGeo.computeBoundingBox();
+      const centerOffset = -0.5 * (starGeo.boundingBox.max.z - starGeo.boundingBox.min.z);
+      starGeo.translate(0, 0, centerOffset);
+      
+      const starMat = new THREE.MeshStandardMaterial({ color: 0xfeca57, roughness: 0.5 });
+      
+      // Distribute stars on vertices of a simpler icosahedron
+      const distIco = new THREE.IcosahedronGeometry(radius, 1);
+      const pos = distIco.attributes.position;
+      const added = [];
+      for(let i=0; i<pos.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        // check duplicate
+        if (!added.find(a => a.distanceTo(v) < 0.1)) {
+          added.push(v);
+          if (isCutaway && v.y < -0.1) continue;
+          
+          const star = new THREE.Mesh(starGeo, starMat);
+          star.position.copy(v).normalize().multiplyScalar(radius + 0.05);
+          star.lookAt(new THREE.Vector3(0,0,0));
+          group.add(star);
+        }
+      }
     }
+
+    if (isCutaway && !isHologram) {
+      const dnaGeo = new THREE.TorusKnotGeometry(1.2, 0.4, 64, 8, 2, 3);
+      const dnaMat = new THREE.MeshStandardMaterial({ color: 0xff7675, roughness: 0.4 });
+      group.add(new THREE.Mesh(dnaGeo, dnaMat));
+    }
+    
     return group;
   },
 
-  // 15. Measles
   buildMeasles(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
