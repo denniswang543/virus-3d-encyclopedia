@@ -6,30 +6,30 @@ const VIRUS_DATABASE = {
     chineseName: "新型冠狀病毒",
     scientificName: "Severe acute respiratory syndrome coronavirus 2",
     family: "冠狀病毒科 (Coronaviridae)",
-    category: "正鏈單股 RNA 病毒 (+ssRNA)",
+    category: "正股單股 RNA 病毒 (+ssRNA)",
     sizeNm: 100, // 直徑 ~100 nm (60-140 nm)
     r0: "2.5 - 5.0 (早期株) / 10 - 18 (Omicron)",
     fatalityRate: "0.1% - 3.4% (隨變異株與免疫力變化)",
-    transmission: "飛沫傳播、氣溶膠 (氣霧)、密閉空間近距離接觸",
+    transmission: "飛沫傳播、氣膠 (氣霧)、密閉空間近距離接觸",
     receptor: "ACE2 (血管緊張素轉化酶 2)",
     incubation: "2 - 14 天 (平均約 3 - 5 天)",
     symptoms: "發燒、乾咳、疲勞、失去味覺/嗅覺、呼吸困難。",
     colorTheme: "#ff3d71",
     accentColor: "#ff708d",
-    description: "2019年底引發全球 COVID-19 大流行之病原體。其最顯著特徵為外膜上放射狀分佈的『S 刺突糖蛋白』(Spike Protein)，外觀如日冕而得名。S蛋白能精準結合人體呼吸道及各器官細胞表面的 ACE2 受體並介導膜融合。",
+    description: "2019年底引發全球 COVID-19 大流行之病原體。其最顯著特徵為外膜上放射狀分佈的『S 棘蛋白』(Spike Protein)，外觀如日冕而得名。S蛋白能精準結合人體呼吸道及各器官細胞表面的 ACE2 受體並介導膜融合。",
     keyFeatures: [
-      "表面具有三聚體 S (Spike) 刺突蛋白，介導宿主受體 ACE2 結合",
+      "表面具有三聚體 S (Spike) 棘蛋白，介導宿主受體 ACE2 結合",
       "脂質雙層包膜嵌有 M (Membrane) 膜蛋白與 E (Envelope) 包膜蛋白",
-      "內部為長約 30,000 核苷酸之正鏈單股 RNA，與 N (Nucleocapsid) 核蛋白纏繞成螺旋",
+      "內部為長約 30,000 核苷酸之正股單股 RNA，與 N (Nucleocapsid) 核蛋白纏繞成螺旋",
       "具備冠狀病毒特有的外切核糖核酸酶 (ExoN) 具校對功能，相較其他 RNA 病毒基因較穩定"
     ],
     hotspots: [
       {
         id: "spike",
-        name: "S 刺突蛋白 (Spike Trimer)",
+        name: "S 棘蛋白 (Spike Trimer)",
         position: [0, 4.3, 0],
         camPos: [0, 6, 7],
-        desc: "三聚體醣蛋白，由 S1 (負責辨識人體 ACE2 受體) 與 S2 (負責膜融合) 亞基構成，是 mRNA 疫苗與中和抗體的主要標靶。"
+        desc: "三聚體醣蛋白，由 S1 (負責辨識人體 ACE2 受體) 與 S2 (負責膜融合) 次單位構成，是 mRNA 疫苗與中和抗體的主要標靶。"
       },
       {
         id: "envelope",
@@ -56,7 +56,7 @@ const VIRUS_DATABASE = {
     chineseName: "猴痘病毒 / M痘",
     scientificName: "Monkeypox virus (Orthopoxvirus)",
     family: "痘病毒科 (Poxviridae)",
-    category: "雙鏈 DNA 病毒 (dsDNA)",
+    category: "雙股 DNA 病毒 (dsDNA)",
     sizeNm: 250, // 200 x 250 x 300 nm
     r0: "1.2 - 2.0 (不同傳播分支有所差異)",
     fatalityRate: "1% - 10% (Clade I 較高，Clade II 較低約 <0.2%)",
@@ -66,11 +66,11 @@ const VIRUS_DATABASE = {
     symptoms: "發燒、劇烈頭痛、淋巴結腫大、背痛、肌肉酸痛、特異性水泡膿疱皮疹。",
     colorTheme: "#ffaa00",
     accentColor: "#ffd166",
-    description: "由痘病毒科正痘病毒屬引起的傳染病，近幾年在全球多國引發關注與公衛緊急警報。形態呈特殊的『磚狀』或卵圓形複合結構，擁有龐大且複雜的雙鏈 DNA 基因組，是目前已知感染人類體積最大的病毒之一。",
+    description: "由痘病毒科正痘病毒屬引起的傳染病，近幾年在全球多國引發關注與公衛緊急警報。形態呈特殊的『磚狀』或卵圓形複合結構，擁有龐大且複雜的雙股 DNA 基因組，是目前已知感染人類體積最大的病毒之一。",
     keyFeatures: [
       "外觀呈獨特的圓角磚狀 (Brick-shaped)，具有多層包膜與外被微管蛋白",
       "內部包含經典的『雙凹啞鈴狀核心』(Dumbbell Core) 與兩側側體 (Lateral Bodies)",
-      "基因組為約 197 kb 的大型雙鏈 DNA，編碼超過 180 種蛋白質",
+      "基因組為約 197 kb 的大型雙股 DNA，編碼超過 180 種蛋白質",
       "完全在宿主細胞質 (Cytoplasm) 中複製，自帶轉錄系統與聚合酶"
     ],
     hotspots: [
@@ -95,7 +95,7 @@ const VIRUS_DATABASE = {
         position: [0, 0, 0],
         camPos: [0, 2, 5],
         requiresCutaway: true,
-        desc: "厚層核心壁包裹著密集的大型雙鏈 DNA 與轉錄酶系統，外型呈凹陷的啞鈴狀，是正痘病毒科的顯著特徵。"
+        desc: "厚層核心壁包裹著密集的大型雙股 DNA 與轉錄酶系統，外型呈凹陷的啞鈴狀，是正痘病毒科的顯著特徵。"
       }
     ],
     clinicalRelevance: "主要症狀為發燒、淋巴結腫大及特異性水泡膿疱皮疹。天花疫苗 (如 JYNNEOS / MVA-BN) 能提供約 85% 的交叉保護力。"
@@ -104,25 +104,25 @@ const VIRUS_DATABASE = {
   "influenza-a": {
     id: "influenza-a",
     name: "Influenza A / H5N1",
-    chineseName: "甲型流感 / 禽流感病毒",
+    chineseName: "A型流感病毒",
     scientificName: "Influenza A virus",
     family: "正黏液病毒科 (Orthomyxoviridae)",
-    category: "負鏈分節 RNA 病毒 (-ssRNA, 8 segments)",
+    category: "負股分節 RNA 病毒 (-ssRNA, 8 segments)",
     sizeNm: 100, // 80-120 nm
     r0: "1.3 - 1.8 (季節性) / 潛在禽傳人重症威脅",
     fatalityRate: "季節性 <0.1% / 高致病性 H5N1 禽傳人歷史致死率達 ~50%",
-    transmission: "飛沫、氣溶膠、直接或間接接觸禽鳥排泄物/呼吸道分泌物",
+    transmission: "飛沫、氣膠、直接或間接接觸禽鳥排泄物/呼吸道分泌物",
     receptor: "唾液酸受體 (α2,6-Gal 人類受體 / α2,3-Gal 禽類受體)",
     incubation: "1 - 4 天 (禽流感可長達 7 天)",
     symptoms: "突發高燒、咳嗽、喉嚨痛、肌肉酸痛、疲勞、流鼻水。",
     colorTheme: "#00d2d3",
     accentColor: "#48dbfb",
-    description: "正黏液病毒科最具變異性的一員，表面分佈兩種關鍵突起：紅色的血凝素 (HA) 與藍色的神經氨酸酶 (NA)。因基因組由 8 條獨立 RNA 片段組成，容易在不同宿主體內發生『抗原重配』(Antigenic Shift) 而產生全球大流行新亞型。",
+    description: "正黏液病毒科最具變異性的一員，表面分佈兩種關鍵突起：紅色的血凝素 (HA) 與藍色的神經胺酸酶 (NA)。因基因組由 8 條獨立 RNA 片段組成，容易在不同宿主體內發生『抗原重配』(Antigenic Shift) 而產生全球大流行新亞型。",
     keyFeatures: [
       "血凝素 (HA, 棒狀三聚體)：負責辨識宿主細胞表面唾液酸並介導內吞",
-      "神經氨酸酶 (NA, 蘑菇狀四聚體)：負責水解唾液酸，幫助新生病毒顆粒脫離宿主細胞",
+      "神經胺酸酶 (NA, 蘑菇狀四聚體)：負責水解唾液酸，幫助新生病毒顆粒脫離宿主細胞",
       "M2 離子通道蛋白：調節病毒體內 pH 值促進脫殼，為金剛烷胺類藥物標靶",
-      "核心由 8 條不同長度的負鏈 RNA 片段 (vRNP) 組成，具高度重組突變特性"
+      "核心由 8 條不同長度的負股 RNA 片段 (vRNP) 組成，具高度重組突變特性"
     ],
     hotspots: [
       {
@@ -134,7 +134,7 @@ const VIRUS_DATABASE = {
       },
       {
         id: "na_spike",
-        name: "神經氨酸酶 (NA, Neuraminidase)",
+        name: "神經胺酸酶 (NA, Neuraminidase)",
         position: [-2.4, 2.4, 0],
         camPos: [-4, 4, 6],
         desc: "呈蘑菇狀四聚體酵素，切斷細胞表面唾液酸讓子代病毒釋放。抗病毒藥物克流感 (Oseltamivir / Tamiflu) 即為 NA 抑制劑。"
@@ -157,7 +157,7 @@ const VIRUS_DATABASE = {
     chineseName: "T4 噬菌體",
     scientificName: "Escherichia virus T4 (Caudoviricetes)",
     family: "肌尾噬菌體科 (Myoviridae)",
-    category: "雙鏈 DNA 病毒 (dsDNA)",
+    category: "雙股 DNA 病毒 (dsDNA)",
     sizeNm: 200, // 長約 200 nm, 頭部寬 85 nm
     r0: "暴發量 (Burst Size) 約 100-300 個/每細菌宿主",
     fatalityRate: "對人體無害 (專性殺傷大腸桿菌等目標細菌)",
@@ -169,7 +169,7 @@ const VIRUS_DATABASE = {
     accentColor: "#d6a2e8",
     description: "生物界著名的『微型奈米注射器』，具有精密如登月艙的機械化幾何結構。能精準辨識並降落在目標大腸桿菌表面，收縮尾鞘並將緊密壓縮在二十面體頭部的 DNA 像注射針一樣直接注入細菌內部。",
     keyFeatures: [
-      "長二十面體頭部 (Capsid Head)：高壓壓縮封裝長達 169 kb 的雙鏈 DNA",
+      "長二十面體頭部 (Capsid Head)：高壓壓縮封裝長達 169 kb 的雙股 DNA",
       "收縮尾鞘 (Contractile Tail Sheath)：內部包圍堅硬中空尾管，能在吸附後收縮刺穿細菌壁",
       "六角形基板 (Baseplate)：配有中心尾針與 6 條可折疊關節尾絲 (Tail Fibers)",
       "現代噬菌體療法 (Phage Therapy) 與抗生素抗藥性 (AMR) 解決方案的代表性研究模型"
@@ -203,10 +203,10 @@ const VIRUS_DATABASE = {
   "ebola": {
     id: "ebola",
     name: "Ebola Virus",
-    chineseName: "埃博拉 / 伊波拉病毒",
+    chineseName: "伊波拉病毒",
     scientificName: "Zaire ebolavirus",
     family: "絲狀病毒科 (Filoviridae)",
-    category: "不分節負鏈單股 RNA 病毒 (-ssRNA)",
+    category: "不分節負股單股 RNA 病毒 (-ssRNA)",
     sizeNm: 970, // 長度 800 - 1000 nm, 寬度約 80 nm
     r0: "1.5 - 2.5",
     fatalityRate: "25% - 90% (平均約 50%)",
@@ -216,11 +216,11 @@ const VIRUS_DATABASE = {
     symptoms: "突發高燒、極度疲勞、肌肉痛、頭痛、咽痛，隨後出現嘔吐、腹瀉、皮疹及內外出血。",
     colorTheme: "#eb4d4b",
     accentColor: "#ff7979",
-    description: "引發致命性埃博拉出血熱的絲狀病原體。外觀極具辨識度，呈長條牧羊杖狀 (Shepherd's crook)、U型或波浪絲狀結構，長度可達近 1 微米 (1000 nm)，是外型最為奇特且最致命的烈性病毒之一。",
+    description: "引發致命性伊波拉出血熱的絲狀病原體。外觀極具辨識度，呈長條牧羊杖狀 (Shepherd's crook)、U型或波浪絲狀結構，長度可達近 1 微米 (1000 nm)，是外型最為奇特且最致命的烈性病毒之一。",
     keyFeatures: [
       "長絲狀 (Filamentous) 形態，常彎曲成『6』字型、牧羊杖或 U 字形態",
       "外膜密布三聚體糖蛋白 (GP)，負責細胞吸附與巨胞飲作用介導侵入",
-      "內部為長條螺旋狀核衣殼 (Nucleocapsid)，直徑約 50 nm，包含約 19 kb 負鏈 RNA",
+      "內部為長條螺旋狀核衣殼 (Nucleocapsid)，直徑約 50 nm，包含約 19 kb 負股 RNA",
       "感染後破壞血管內皮細胞完整性與凝血系統，引發全身性出血與多器官衰竭"
     ],
     hotspots: [
@@ -253,10 +253,10 @@ const VIRUS_DATABASE = {
   "dengue": {
     id: "dengue",
     name: "Dengue Virus",
-    chineseName: "登革熱病毒",
+    chineseName: "登革病毒",
     scientificName: "Dengue virus (Flavivirus)",
     family: "黃病毒科 (Flaviviridae)",
-    category: "正鏈單股 RNA 病毒 (+ssRNA)",
+    category: "正股單股 RNA 病毒 (+ssRNA)",
     sizeNm: 50, // 直徑約 50 nm
     r0: "1.5 - 3.0 (隨病媒蚊密度顯著變動)",
     fatalityRate: "常規 <1% / 登革出血熱 (DHF) 未及時治療可達 >20%",
@@ -271,7 +271,7 @@ const VIRUS_DATABASE = {
       "人字形 (Herringbone) 緊密互鎖的 90 個 E 蛋白二聚體，表面平滑無顯著外凸刺突",
       "未成熟病毒表面呈尖銳三聚體刺突，經宿主高爾基體 Furin 蛋白酶剪切後轉變為平滑成熟形態",
       "抗體依賴性增強作用 (ADE, Antibody-Dependent Enhancement)：二次感染不同血清型時易引發重症",
-      "內部包含單股正鏈 RNA 基因組 (~11 kb)，編碼 3 種結構蛋白與 7 種非結構蛋白 (NS1-NS5)"
+      "內部包含單股正股 RNA 基因組 (~11 kb)，編碼 3 種結構蛋白與 7 種非結構蛋白 (NS1-NS5)"
     ],
     hotspots: [
       {
@@ -294,7 +294,7 @@ const VIRUS_DATABASE = {
         position: [0, 0, 0],
         camPos: [0, 1.5, 4],
         requiresCutaway: true,
-        desc: "由多拷貝 C 蛋白無定形包裹單股正鏈 RNA，侵入細胞質後可直接作為 mRNA 轉譯出完整多聚蛋白。"
+        desc: "由多拷貝 C 蛋白無定形包裹單股正股 RNA，侵入細胞質後可直接作為 mRNA 轉譯出完整多聚蛋白。"
       }
     ],
     clinicalRelevance: "臨床症狀俗稱『斷骨熱』(劇烈骨關節痛、高燒、眼窩痛與皮疹)。目前有 Dengvaxia 與 Qdenga (TAK-003) 疫苗核准使用。"
@@ -303,10 +303,10 @@ const VIRUS_DATABASE = {
   "rabies": {
     id: "rabies",
     name: "Rabies Virus",
-    chineseName: "狂犬病毒",
+    chineseName: "狂犬病病毒",
     scientificName: "Rabies lyssavirus",
     family: "彈狀病毒科 (Rhabdoviridae)",
-    category: "不分節負鏈單股 RNA 病毒 (-ssRNA)",
+    category: "不分節負股單股 RNA 病毒 (-ssRNA)",
     sizeNm: 180, // 75 x 180 nm 子彈形
     r0: "1.0 - 2.0 (哺乳動物間咬傷)",
     fatalityRate: ">99.9% (一旦發病致死率近乎100%，最致命神經毒性病毒)",
@@ -344,7 +344,7 @@ const VIRUS_DATABASE = {
         position: [0, 0, 0],
         camPos: [0, 1, 4.5],
         requiresCutaway: true,
-        desc: "由 N 核蛋白緊密包覆 12 kb 負鏈 RNA，以每圈約 30 個 N 亞基的精確節奏盤繞成緊密圓柱彈簧核心。"
+        desc: "由 N 核蛋白緊密包覆 12 kb 負股 RNA，以每圈約 30 個 N 次單位的精確節奏盤繞成緊密圓柱彈簧核心。"
       }
     ],
     clinicalRelevance: "一旦出現恐水、痙攣等臨床神經症狀幾乎百分之百致命。暴露後預防 (PEP) 是唯一救命手段：徹底沖洗傷口、及時接種人用狂犬病疫苗與抗狂犬病免疫球蛋白 (RIG)。"
@@ -353,10 +353,10 @@ const VIRUS_DATABASE = {
   "hiv-1": {
     id: "hiv-1",
     name: "HIV-1",
-    chineseName: "人類免疫缺陷病毒 / 愛滋病毒",
+    chineseName: "人類免疫缺乏病毒 / 愛滋病毒",
     scientificName: "Human immunodeficiency virus 1",
-    family: "逆轉錄病毒科 (Retroviridae)",
-    category: "正鏈 RNA 雙拷貝逆轉錄病毒 (ssRNA-RT)",
+    family: "反轉錄病毒科 (Retroviridae)",
+    category: "正股 RNA 雙拷貝反轉錄病毒 (ssRNA-RT)",
     sizeNm: 120, // 直徑約 100 - 120 nm
     r0: "2.0 - 5.0 (無防護性行為/血液途徑)",
     fatalityRate: "未治療下 >90% (進展為 AIDS) / 規範抗病毒治療 (ART) 預期壽命接近常人",
@@ -366,12 +366,12 @@ const VIRUS_DATABASE = {
     symptoms: "急性期似流感症狀（發燒、喉嚨痛、淋巴腫）；晚期（AIDS）引發各種伺機性感染（肺囊蟲肺炎、卡波西氏肉瘤等）。",
     colorTheme: "#10ac84",
     accentColor: "#1dd1a1",
-    description: "逆轉錄病毒科慢病毒屬病原體，攻擊人體免疫系統核心 CD4+ T 淋巴細胞。其內部最具代表性的是一個『截角錐形』(Fullerene Conical Core) 衣殼，包裹著兩條正鏈 RNA、逆轉錄酶與整合酶。",
+    description: "反轉錄病毒科慢病毒屬病原體，攻擊人體免疫系統核心 CD4+ T 淋巴細胞。其內部最具代表性的是一個『截角錐形』(Fullerene Conical Core) 衣殼，包裹著兩條正股 RNA、反轉錄酶與整合酶。",
     keyFeatures: [
       "外膜分佈稀疏但關鍵的 gp120 (球狀頭部) 與 gp41 (跨膜柄部) 刺突複合體 (約 7-14 個)",
       "膜下襯有 p17 基質蛋白 (Matrix Shell)，維持球形穩定",
       "標誌性富勒烯錐形衣殼 (Conical p24 Capsid)：由約 250 個六聚體與 12 個五聚體組成的圓錐體",
-      "核心攜帶兩條相同的 (+)ssRNA 與逆轉錄酶 (RT)、整合酶 (IN)、蛋白酶 (PR)"
+      "核心攜帶兩條相同的 (+)ssRNA 與反轉錄酶 (RT)、整合酶 (IN)、蛋白酶 (PR)"
     ],
     hotspots: [
       {
@@ -391,14 +391,14 @@ const VIRUS_DATABASE = {
       },
       {
         id: "rt_enzyme",
-        name: "雙拷貝 RNA 與逆轉錄酶 (RNA & RT)",
+        name: "雙拷貝 RNA 與反轉錄酶 (RNA & RT)",
         position: [0, -0.4, 0],
         camPos: [0, 0, 4],
         requiresCutaway: true,
-        desc: "兩條相同的單股 RNA 搭配逆轉錄酶 (RT)，能將 RNA 逆轉錄為前病毒 DNA 並經整合酶嵌入宿主染色體形成病毒庫。"
+        desc: "兩條相同的單股 RNA 搭配反轉錄酶 (RT)，能將 RNA 反轉錄為前病毒 DNA 並經整合酶嵌入宿主染色體形成病毒庫。"
       }
     ],
-    clinicalRelevance: "雞尾酒療法 (高效抗逆轉錄病毒治療 HAART/ART) 能將病毒量壓制至檢測不到 (U=U: 測不到即不傳染)。PrEP (暴露前預防用藥) 可降低 >99% 經性行為感染風險。"
+    clinicalRelevance: "雞尾酒療法 (高效抗反轉錄病毒治療 HAART/ART) 能將病毒量壓制至檢測不到 (U=U: 測不到即不傳染)。PrEP (暴露前預防用藥) 可降低 >99% 經性行為感染風險。"
   }
 ,
 
@@ -417,13 +417,13 @@ const VIRUS_DATABASE = {
     "incubation": "60 - 150 天",
     "colorTheme": "#f1c40f",
     "accentColor": "#f39c12",
-    "description": "引起全球慢性肝炎與肝癌的主要元兇。完整的病毒顆粒稱為戴恩顆粒 (Dane particle)，表面富含 HBsAg 表面抗原，內部衣殼包覆著特殊的部分雙鏈環狀DNA與自帶的聚合酶。",
+    "description": "引起全球慢性肝炎與肝癌的主要元兇。完整的病毒顆粒稱為戴恩顆粒 (Dane particle)，表面富含 HBsAg 表面抗原，內部衣殼包覆著特殊的部分雙股環狀DNA與自帶的聚合酶。",
     "symptoms": "黃疸（皮膚及眼白發黃）、極度疲勞、噁心、嘔吐、腹痛、茶色尿。",
     "keyFeatures": [
         "Dane particle (42nm) 為具感染力的完整病毒體",
         "外膜含有大量 HBsAg (表面抗原)，也會產生大量無核酸的亞病毒顆粒",
-        "特殊的 rcDNA (部分雙鏈環狀DNA)，在細胞核內轉為 cccDNA",
-        "具有逆轉錄過程，為嗜肝DNA病毒的特徵"
+        "特殊的 rcDNA (部分雙股環狀DNA)，在細胞核內轉為 cccDNA",
+        "具有反轉錄過程，為嗜肝DNA病毒的特徵"
     ],
     "hotspots": [
         {
@@ -467,7 +467,7 @@ const VIRUS_DATABASE = {
     "chineseName": "茲卡病毒",
     "scientificName": "Zika virus",
     "family": "黃病毒科 (Flaviviridae)",
-    "category": "正鏈單股 RNA (+ssRNA)",
+    "category": "正股單股 RNA (+ssRNA)",
     "sizeNm": 50,
     "r0": "1.4 - 6.6 (蚊蟲叮咬)",
     "fatalityRate": "極低 (主要威脅為孕婦感染致胎兒小頭畸形)",
@@ -476,7 +476,7 @@ const VIRUS_DATABASE = {
     "incubation": "3 - 14 天",
     "colorTheme": "#e84393",
     "accentColor": "#fd79a8",
-    "description": "與登革熱病毒結構高度相似，表面光滑呈二十面體。雖然多數成人感染症狀輕微，但若孕婦感染，病毒可穿過胎盤引發嚴重的胎兒神經發育異常（小頭畸形）。",
+    "description": "與登革病毒結構高度相似，表面光滑呈二十面體。雖然多數成人感染症狀輕微，但若孕婦感染，病毒可穿過胎盤引發嚴重的胎兒神經發育異常（小頭畸形）。",
     "symptoms": "輕微發燒、皮疹、結膜炎（紅眼）、肌肉和關節痛、全身倦怠。",
     "keyFeatures": [
         "成熟顆粒表面由 180 個 E 糖蛋白平滑排列成人字形",
@@ -518,7 +518,7 @@ const VIRUS_DATABASE = {
     "incubation": "2 天",
     "colorTheme": "#0984e3",
     "accentColor": "#74b9ff",
-    "description": "全球嬰幼兒嚴重腹瀉最常見的原因。外觀酷似車輪 (Rota)，具有獨特的三層同心蛋白質衣殼，保護內部 11 段雙鏈 RNA 免受胃酸及腸道酵素破壞。",
+    "description": "全球嬰幼兒嚴重腹瀉最常見的原因。外觀酷似車輪 (Rota)，具有獨特的三層同心蛋白質衣殼，保護內部 11 段雙股 RNA 免受胃酸及腸道酵素破壞。",
     "symptoms": "嚴重水瀉、嘔吐、發燒、腹痛，易導致嬰幼兒嚴重脫水。",
     "keyFeatures": [
         "無脂質包膜，具有堅固的三層衣殼 (TLP, Triple-Layered Particle)",
@@ -567,7 +567,7 @@ const VIRUS_DATABASE = {
     "chineseName": "單純皰疹病毒",
     "scientificName": "Human alphaherpesvirus 1/2",
     "family": "皰疹病毒科 (Herpesviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 200,
     "r0": "NA (終身潛伏，復發時具傳染性)",
     "fatalityRate": "極低 (少數引發皰疹性腦炎則高風險)",
@@ -614,7 +614,7 @@ const VIRUS_DATABASE = {
                 3
             ],
             "requiresCutaway": true,
-            "desc": "堅固的 162 個殼粒組成的衣殼，包裹著超過 150 kb 的線狀雙鏈 DNA。"
+            "desc": "堅固的 162 個殼粒組成的衣殼，包裹著超過 150 kb 的線狀雙股 DNA。"
         }
     ],
     "clinicalRelevance": "抗病毒藥物如 Acyclovir 及其衍生物可抑制 DNA 聚合酶，減輕症狀並縮短病程，但無法根治潛伏感染。"
@@ -626,11 +626,11 @@ const VIRUS_DATABASE = {
     "chineseName": "諾羅病毒",
     "scientificName": "Norwalk virus",
     "family": "杯狀病毒科 (Caliciviridae)",
-    "category": "正鏈單股 RNA (+ssRNA)",
+    "category": "正股單股 RNA (+ssRNA)",
     "sizeNm": 38,
     "r0": "2.0 - 7.0",
     "fatalityRate": "極低 (主要風險為脫水)",
-    "transmission": "糞口傳染、受污染之水/食物 (如生蠔)、氣溶膠",
+    "transmission": "糞口傳染、受污染之水/食物 (如生蠔)、氣膠",
     "receptor": "組織血型抗原 (HBGA)",
     "incubation": "12 - 48 小時",
     "colorTheme": "#6c5ce7",
@@ -668,7 +668,7 @@ const VIRUS_DATABASE = {
     "chineseName": "人類乳突病毒",
     "scientificName": "Human papillomavirus",
     "family": "乳突病毒科 (Papillomaviridae)",
-    "category": "雙鏈環狀 DNA (dsDNA)",
+    "category": "雙股環狀 DNA (dsDNA)",
     "sizeNm": 55,
     "r0": "NA (親密接觸與性接觸為主)",
     "fatalityRate": "病毒本身不致死，但高危險型 (16, 18) 會引發子宮頸癌等多種癌症",
@@ -681,7 +681,7 @@ const VIRUS_DATABASE = {
     "symptoms": "多數無症狀；部分引起生殖器疣（菜花）或一般皮膚疣；高危險型感染長期可能發展為癌症。",
     "keyFeatures": [
         "72 個五聚體 (Capsomeres) 構成星狀排列的二十面體衣殼",
-        "環狀雙鏈 DNA 約 8 kb，編碼 E (早期) 與 L (晚期) 蛋白",
+        "環狀雙股 DNA 約 8 kb，編碼 E (早期) 與 L (晚期) 蛋白",
         "E6 蛋白降解 p53，E7 蛋白結合 pRb，為誘發癌症的關鍵機制"
     ],
     "hotspots": [
@@ -710,11 +710,11 @@ const VIRUS_DATABASE = {
     "chineseName": "麻疹病毒",
     "scientificName": "Measles morbillivirus",
     "family": "副黏液病毒科 (Paramyxoviridae)",
-    "category": "不分節負鏈單股 RNA (-ssRNA)",
+    "category": "不分節負股單股 RNA (-ssRNA)",
     "sizeNm": 150,
     "r0": "12 - 18 (極具傳染性)",
     "fatalityRate": "0.1% - 0.2% (營養不良兒童或免疫低下者可達 10%)",
-    "transmission": "空氣傳播 (氣溶膠)、飛沫、直接接觸分泌物",
+    "transmission": "空氣傳播 (氣膠)、飛沫、直接接觸分泌物",
     "receptor": "CD150 (SLAM), Nectin-4",
     "incubation": "10 - 14 天",
     "colorTheme": "#e15f41",
@@ -756,7 +756,7 @@ const VIRUS_DATABASE = {
                 4
             ],
             "requiresCutaway": true,
-            "desc": "不分段的單股負鏈 RNA，與 N 蛋白緊密結合，形狀如同柔軟盤繞的彈簧。"
+            "desc": "不分段的單股負股 RNA，與 N 蛋白緊密結合，形狀如同柔軟盤繞的彈簧。"
         }
     ],
     "clinicalRelevance": "MMR (麻疹、腮腺炎、德國麻疹) 混合疫苗極其有效，提供長效終身免疫。無特定抗病毒藥物，以支持性療法為主。"
@@ -770,7 +770,7 @@ const VIRUS_DATABASE = {
     "chineseName": "米米病毒 (巨型多毛病毒)",
     "scientificName": "Acanthamoeba polyphaga mimivirus",
     "family": "擬菌病毒科 (Mimiviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 750,
     "r0": "NA (感染變形蟲)",
     "fatalityRate": "對人類無明顯致病性",
@@ -827,7 +827,7 @@ const VIRUS_DATABASE = {
     "chineseName": "闊口罐病毒",
     "scientificName": "Pithovirus sibericum",
     "family": "闊口罐病毒科 (Pithoviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 1500,
     "r0": "NA (感染變形蟲)",
     "fatalityRate": "對人類無害",
@@ -869,7 +869,7 @@ const VIRUS_DATABASE = {
     "chineseName": "圖潘病毒",
     "scientificName": "Tupanvirus",
     "family": "擬菌病毒科 (Mimiviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 1200,
     "r0": "NA (感染變形蟲)",
     "fatalityRate": "對人類無害",
@@ -910,7 +910,7 @@ const VIRUS_DATABASE = {
     "chineseName": "雙尾紡錘病毒",
     "scientificName": "Acidianus two-tailed virus",
     "family": "雙尾病毒科 (Bicaudaviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 140,
     "r0": "NA (感染古菌)",
     "fatalityRate": "NA",
@@ -951,7 +951,7 @@ const VIRUS_DATABASE = {
     "chineseName": "雙子星病毒",
     "scientificName": "Geminiviridae",
     "family": "雙子星病毒科 (Geminiviridae)",
-    "category": "單鏈 DNA (ssDNA)",
+    "category": "單股 DNA (ssDNA)",
     "sizeNm": 30,
     "r0": "NA (植物病毒)",
     "fatalityRate": "嚴重損害農作物",
@@ -992,7 +992,7 @@ const VIRUS_DATABASE = {
     "chineseName": "菸草鑲嵌病毒",
     "scientificName": "Tobacco mosaic virus",
     "family": "帚狀病毒科 (Virgaviridae)",
-    "category": "正鏈單股 RNA (+ssRNA)",
+    "category": "正股單股 RNA (+ssRNA)",
     "sizeNm": 300,
     "r0": "NA",
     "fatalityRate": "NA",
@@ -1034,7 +1034,7 @@ const VIRUS_DATABASE = {
     "chineseName": "M13 噬菌體",
     "scientificName": "Escherichia virus M13",
     "family": "絲狀噬菌體科 (Inoviridae)",
-    "category": "單鏈 DNA (ssDNA)",
+    "category": "單股 DNA (ssDNA)",
     "sizeNm": 900,
     "r0": "NA",
     "fatalityRate": "不殺死宿主 (慢性釋放)",
@@ -1075,7 +1075,7 @@ const VIRUS_DATABASE = {
     "chineseName": "彈簧病毒",
     "scientificName": "Aeropyrum coil-shaped virus",
     "family": "未分類 (Unassigned)",
-    "category": "單鏈 DNA (ssDNA)",
+    "category": "單股 DNA (ssDNA)",
     "sizeNm": 230,
     "r0": "NA (古菌病毒)",
     "fatalityRate": "NA",
@@ -1116,7 +1116,7 @@ const VIRUS_DATABASE = {
     "chineseName": "淚滴形病毒",
     "scientificName": "Sulfolobus newzealandicus droplet-shaped virus",
     "family": "滴狀病毒科 (Guttaviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 110,
     "r0": "NA (古菌病毒)",
     "fatalityRate": "NA",
@@ -1157,7 +1157,7 @@ const VIRUS_DATABASE = {
     "chineseName": "星狀病毒",
     "scientificName": "Mamastrovirus",
     "family": "星狀病毒科 (Astroviridae)",
-    "category": "正鏈單股 RNA (+ssRNA)",
+    "category": "正股單股 RNA (+ssRNA)",
     "sizeNm": 35,
     "r0": "高",
     "fatalityRate": "極低",
@@ -1198,7 +1198,7 @@ const VIRUS_DATABASE = {
     "chineseName": "桿狀病毒",
     "scientificName": "Baculoviridae",
     "family": "桿狀病毒科 (Baculoviridae)",
-    "category": "環狀雙鏈 DNA (dsDNA)",
+    "category": "環狀雙股 DNA (dsDNA)",
     "sizeNm": 300,
     "r0": "NA (感染昆蟲)",
     "fatalityRate": "對特定害蟲具高致死率",
@@ -1240,7 +1240,7 @@ const VIRUS_DATABASE = {
     "chineseName": "羊痘病毒",
     "scientificName": "Orf virus",
     "family": "痘病毒科 (Poxviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 260,
     "r0": "NA (人畜共通)",
     "fatalityRate": "極低 (對人)",
@@ -1281,7 +1281,7 @@ const VIRUS_DATABASE = {
     "chineseName": "Phi29 噬菌體",
     "scientificName": "Bacillus virus phi29",
     "family": "短尾噬菌體科 (Podoviridae)",
-    "category": "雙鏈 DNA (dsDNA)",
+    "category": "雙股 DNA (dsDNA)",
     "sizeNm": 80,
     "r0": "NA",
     "fatalityRate": "裂解枯草桿菌",
@@ -1322,7 +1322,7 @@ const VIRUS_DATABASE = {
     "chineseName": "刺錘噬菌體",
     "scientificName": "Escherichia virus phiX174",
     "family": "微小噬菌體科 (Microviridae)",
-    "category": "環狀單鏈 DNA (ssDNA)",
+    "category": "環狀單股 DNA (ssDNA)",
     "sizeNm": 30,
     "r0": "NA",
     "fatalityRate": "裂解宿主",
@@ -1363,7 +1363,7 @@ const VIRUS_DATABASE = {
     "chineseName": "環曲病毒",
     "scientificName": "Torovirus",
     "family": "冠狀病毒科 / 網巢病毒目 (Nidovirales)",
-    "category": "正鏈單股 RNA (+ssRNA)",
+    "category": "正股單股 RNA (+ssRNA)",
     "sizeNm": 140,
     "r0": "NA",
     "fatalityRate": "NA",
