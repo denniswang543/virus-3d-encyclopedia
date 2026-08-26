@@ -32,7 +32,7 @@ const VirusBuilder = {
     
     // Greyish envelope (Original preferred color)
     const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x00d2d3, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0xa4b0be, roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide });
+                              : new THREE.MeshStandardMaterial({ color: 0xf39c12, roughness: 0.3, metalness: 0.5, side: THREE.DoubleSide });
     group.add(new THREE.Mesh(envGeo, envMat));
 
     // Red Spikes (S Protein)
@@ -40,7 +40,7 @@ const VirusBuilder = {
       const sGroup = new THREE.Group();
       
       const stalkGeo = new THREE.CylinderGeometry(0.05, 0.1, 0.8, 8);
-      const stalkMat = new THREE.MeshStandardMaterial({ color: 0xff4757, roughness: 0.4 });
+      const stalkMat = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.4 });
       const stalk = new THREE.Mesh(stalkGeo, stalkMat);
       sGroup.add(stalk);
       
@@ -762,7 +762,54 @@ const VirusBuilder = {
   },
 
   // 9. HBV
-    buildZika(mode = "surface") {
+    buildHBV(mode = "surface") {
+    const group = new THREE.Group();
+    group.name = "hbv";
+    const isCutaway = mode === "cutaway";
+    const isHologram = mode === "hologram";
+    
+    const radius = 2.8;
+    const envGeo = isCutaway ? new THREE.SphereGeometry(radius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.SphereGeometry(radius, 48, 48);
+    if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.1, 4.5);
+    
+    // Bright orange to match image
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color:  0x00d2d3 , wireframe: true, transparent: true, opacity: 0.4 }) 
+                              : new THREE.MeshStandardMaterial({ color:  0x00d2d3, roughness: 0.7, side: THREE.DoubleSide });
+    group.add(new THREE.Mesh(envGeo, envMat));
+
+    // Dark orange dense bumps
+    if (!isHologram) {
+      const spikeGeo = new THREE.SphereGeometry(0.18, 12, 12);
+      const spikeMat = new THREE.MeshStandardMaterial({ color:  0x0a3d62, roughness: 0.8 });
+      const spikeCount = 120;
+      for (let i = 0; i < spikeCount; i++) {
+        const y = 1 - (i / (spikeCount-1)) * 2;
+        if (isCutaway && y < -0.1) continue;
+        const tempR = Math.sqrt(1 - y*y);
+        const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+        const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
+        
+        const noise = Math.sin(norm.x * 4.5) * Math.cos(norm.y * 4.5) * Math.sin(norm.z * 4.5) * 0.1;
+        
+        const spike = new THREE.Mesh(spikeGeo, spikeMat);
+        spike.position.copy(norm).multiplyScalar(radius + noise + 0.1);
+        
+        // Flatten slightly to look like a surface protein
+        spike.lookAt(new THREE.Vector3(0,0,0));
+        spike.scale.set(1, 1, 0.6);
+        group.add(spike);
+      }
+    }
+
+    if (isCutaway && !isHologram) {
+      const coreGeo = new THREE.IcosahedronGeometry(1.6, 2);
+      const coreMat = new THREE.MeshStandardMaterial({ color: 0x1dd1a1, roughness: 0.5 });
+      group.add(new THREE.Mesh(coreGeo, coreMat));
+    }
+    return group;
+  },
+
+  buildZika(mode = "surface") {
     // Reuse dengue logic but with different colors
     const group = this.buildDengue(mode);
     group.name = "zika";
@@ -1774,7 +1821,7 @@ const VirusBuilder = {
 
       // 2. Red Inner Core (DNA/Protein complex) visible through the blue shell
       const coreGeo = new THREE.IcosahedronGeometry(radius * 0.65, 1);
-      const coreMat = new THREE.MeshStandardMaterial({ color: 0xff4757, roughness: 0.8, flatShading: true });
+      const coreMat = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.8, flatShading: true });
       group.add(new THREE.Mesh(coreGeo, coreMat));
 
       // 3. Penton Bases, Yellow Fibers, and Green Knobs
@@ -1917,6 +1964,43 @@ const VirusBuilder = {
       }
     });
     return group;
+  },
+
+
+  buildVZV(mode = "surface") {
+    // VZV is closely related to HSV, structurally identical (Envelope, Tegument, Capsid, DNA).
+    // We will use the HSV builder and recolor it to a distinct "chickenpox" red/pink theme.
+    const group = this.buildHSV(mode);
+    group.name = "vzv";
+    
+    group.traverse((child) => {
+      if (child.isMesh && child.material && child.material.color) {
+        const hex = child.material.color.getHex();
+        // Envelope: 0xd63031 -> 0xff4757
+        if (hex === 0xd63031 || hex === 0xff7675) child.material.color.setHex(0xff4757);
+        // Spikes: 0x2d3436 -> 0xff7f50
+        if (hex === 0x2d3436) child.material.color.setHex(0xff7f50);
+        // Tegument: 0xffeaa7 -> 0xffa502
+        if (hex === 0xffeaa7 || hex === 0xfdcb6e) child.material.color.setHex(0xffa502);
+        // Capsid: 0x74b9ff -> 0x2ed573
+        if (hex === 0x74b9ff || hex === 0x0984e3) child.material.color.setHex(0x2ed573);
+      }
+    });
+    return group;
+  },
+
+  // Helper to make geometries look like organic lipid membranes or irregular proteins
+  makeOrganic(geo, amplitude = 0.2, frequency = 4) {
+    if (!geo.attributes.position) return;
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+      // Pseudo-random cellular noise using sine/cosine
+      const noise = Math.sin(v.x * frequency) * Math.cos(v.y * frequency) * Math.sin(v.z * frequency) * amplitude;
+      v.addScaledVector(v.clone().normalize(), noise);
+      pos.setXYZ(i, v.x, v.y, v.z);
+    }
+    geo.computeVertexNormals();
   },
 
 
