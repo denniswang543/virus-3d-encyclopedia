@@ -1881,7 +1881,9 @@ const VirusBuilder = {
     });
     return group;
   },
-case "vzv": return this.buildVZV(mode);
+  createVirus(virusId, mode = "surface") {
+    switch (virusId) {
+        case "vzv": return this.buildVZV(mode);
 
 
         case "adenovirus": return this.buildAdenovirus(mode);
