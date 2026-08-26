@@ -243,18 +243,18 @@ const VirusBuilder = {
     // 表面密集細小刺突 (Fine surface tubules/spikes)
     if (!isHologram) {
       const spikeGroup = new THREE.Group();
-      // 短柱體
+      // 短柱體 (加粗拉長一點讓它更明顯)
       const stalk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.02, 0.04, 0.3, 5),
-        new THREE.MeshStandardMaterial({ color: 0xFDA7DF })
+        new THREE.CylinderGeometry(0.03, 0.05, 0.35, 5),
+        new THREE.MeshStandardMaterial({ color: 0xFDA7DF, roughness: 0.6 })
       );
-      stalk.position.y = 0.15;
+      stalk.position.y = 0.175;
       // 微小白亮突起頭部
       const head = new THREE.Mesh(
-        new THREE.SphereGeometry(0.04, 8, 8),
-        new THREE.MeshStandardMaterial({ color: 0xffcccc })
+        new THREE.SphereGeometry(0.06, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffcccc, roughness: 0.3 })
       );
-      head.position.y = 0.32;
+      head.position.y = 0.38;
       spikeGroup.add(stalk);
       spikeGroup.add(head);
 
@@ -266,27 +266,32 @@ const VirusBuilder = {
         const tempR = Math.sqrt(1 - y * y);
         const theta = phi * i;
         
-        // 算出在球體上的分佈點，再做一樣的變形拉長
+        // 先投影在單位球上，乘以 2.4 半徑，再套用 X 軸的 1.5 倍拉長
         const norm = new THREE.Vector3(Math.cos(theta) * tempR, y, Math.sin(theta) * tempR);
-        const pos = norm.clone();
-        pos.x *= 1.5; // 對應 envGeo.scale(1.5, 1.0, 1.0)
+        const pos = norm.clone().multiplyScalar(envRadius);
+        pos.x *= 1.5; 
         
-        // 加入相同 noise 的偏移量，讓刺突能貼齊皺褶表面
+        // 這時的 pos 才會對應到未變形的 envGeo 表面座標
         const noise1 = Math.sin(pos.x * 5) * Math.cos(pos.y * 5) * Math.sin(pos.z * 5);
         const noise2 = Math.sin(pos.x * 12 + pos.y * 8) * Math.cos(pos.z * 10);
         const totalNoise = (noise1 * 0.15) + (noise2 * 0.08);
         
-        // 取法向量 (稍微近似)
+        // 算出該點的法向量
+        const spikeNormal = pos.clone().normalize();
+        
+        // 把刺突推到加上噪音起伏後的最外層，並預留一點厚度 (0.05) 避免穿模
+        pos.add(spikeNormal.multiplyScalar(totalNoise - 0.05));
+        
         const spike = spikeGroup.clone();
-        const baseRadius = 2.4;
-        spike.position.copy(pos).normalize().multiplyScalar(baseRadius * pos.length() / 2.4 + totalNoise);
-        spike.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+        spike.position.copy(pos);
+        spike.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), spikeNormal);
         group.add(spike);
       }
     }
 
     return group;
   },
+
 
     buildInfluenzaA(mode = "surface") {
     const group = new THREE.Group();
