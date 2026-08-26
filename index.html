@@ -39,7 +39,7 @@
     <!-- 左側病毒選擇清單 -->
     <aside class="left-sidebar">
       <div class="sidebar-header">
-        <i class="fa-solid fa-dna"></i> 病毒模型庫 (29款精選模型)
+        <i class="fa-solid fa-dna"></i> 病毒模型庫 (34款精選模型)
       </div>
       <div class="virus-list">
 
@@ -80,7 +80,37 @@
           </div>
         </button>
 
-        <!-- 4. Bacteriophage T4 -->
+        
+        <!-- New Outbreaks -->
+        <button class="virus-card-btn" data-virus-id="adenovirus">
+          <div class="card-icon" style="color: #00d2d3;"><i class="fa-solid fa-satellite"></i></div>
+          <div class="card-info">
+            <div class="card-title">腺病毒 (Adenovirus)</div>
+            <div class="card-meta"><span class="tag-badge tag-dna">dsDNA</span> <span class="tag-size">90 nm</span></div>
+          </div>
+        </button>
+        <button class="virus-card-btn" data-virus-id="enterovirus">
+          <div class="card-icon" style="color: #ff9f43;"><i class="fa-solid fa-child-reaching"></i></div>
+          <div class="card-info">
+            <div class="card-title">腸病毒 (Enterovirus)</div>
+            <div class="card-meta"><span class="tag-badge tag-rna">+ssRNA</span> <span class="tag-size">30 nm</span></div>
+          </div>
+        </button>
+        <button class="virus-card-btn" data-virus-id="rhinovirus">
+          <div class="card-icon" style="color: #1dd1a1;"><i class="fa-solid fa-head-side-cough"></i></div>
+          <div class="card-info">
+            <div class="card-title">鼻病毒 (Rhinovirus)</div>
+            <div class="card-meta"><span class="tag-badge tag-rna">+ssRNA</span> <span class="tag-size">30 nm</span></div>
+          </div>
+        </button>
+        <button class="virus-card-btn" data-virus-id="influenza-b">
+          <div class="card-icon" style="color: #54a0ff;"><i class="fa-solid fa-snowflake"></i></div>
+          <div class="card-info">
+            <div class="card-title">B型流感病毒</div>
+            <div class="card-meta"><span class="tag-badge tag-rna">-ssRNA</span> <span class="tag-size">100 nm</span></div>
+          </div>
+        </button>
+<!-- 4. Bacteriophage T4 -->
         <button class="virus-card-btn" data-virus-id="bacteriophage-t4">
           <div class="card-icon" style="color: #a55eea;"><i class="fa-solid fa-spider"></i></div>
           <div class="card-info">
@@ -689,12 +719,12 @@
   <script src="js/ARButton.js?v=4"></script>
 
   <!-- Application Scripts -->
-  <script src="js/virusData.js?v=2"></script>
-  <script src="js/virusModels.js"></script>
+  <script src="js/virusData.js?v=3"></script>
+  <script src="js/virusModels.js?v=2"></script>
   <script src="js/virusAnimations.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/comparison.js"></script>
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=18"></script>
 
 </body>
 </html>
