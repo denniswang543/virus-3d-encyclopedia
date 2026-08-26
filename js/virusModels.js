@@ -23,84 +23,161 @@ const VirusBuilder = {
       buildSARSCoV2(mode = "surface") {
     const group = new THREE.Group();
     group.name = "sars-cov-2";
+
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
-    const envRadius = 2.8;
-    const envGeo = isCutaway ? new THREE.SphereGeometry(envRadius, 64, 64, 0, Math.PI * 2, 0, Math.PI * 0.55) : new THREE.SphereGeometry(envRadius, 64, 64);
-    if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.15, 3);
+    // 膜外殼 (Lipid Envelope)
+    const envRadius = 3.0;
+    const envGeo = isCutaway 
+      ? new THREE.SphereGeometry(envRadius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.58) 
+      : new THREE.SphereGeometry(envRadius, 48, 48);
+
+    const envMat = isHologram
+      ? new THREE.MeshBasicMaterial({ color: 0x00f2fe, wireframe: true, transparent: true, opacity: 0.4 })
+      : new THREE.MeshStandardMaterial({
+          color: 0x4a1525,
+          roughness: 0.7,
+          metalness: 0.1,
+          bumpScale: 0.05,
+          side: THREE.DoubleSide
+        });
+
+    const envelope = new THREE.Mesh(envGeo, envMat);
+    envelope.name = "sars_envelope";
+    group.add(envelope);
+
+    // 剖面切面包邊 (Cross-section lipid bilayer)
+    if (isCutaway && !isHologram) {
+      const cutCapGeo = new THREE.CircleGeometry(envRadius, 48);
+      const cutCapMat = new THREE.MeshStandardMaterial({
+        color: 0x8a2be2,
+        roughness: 0.5,
+        side: THREE.DoubleSide
+      });
+      const cutCap = new THREE.Mesh(cutCapGeo, cutCapMat);
+      cutCap.rotation.x = Math.PI / 2;
+      cutCap.position.y = -Math.cos(Math.PI * 0.58) * envRadius; // 切面底處
+      group.add(cutCap);
+    }
+
+    // S 刺突蛋白 (Spike Trimers) - 經典皇冠狀三聚體
+    const spikeCount = isCutaway ? 45 : 75;
+    const stalkGeo = new THREE.CylinderGeometry(0.08, 0.12, 1.2, 8);
+    const headGeo = new THREE.DodecahedronGeometry(0.35, 1);
     
-    // Greyish envelope (Original preferred color)
-    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x00d2d3, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0xf39c12, roughness: 0.3, metalness: 0.5, side: THREE.DoubleSide });
-    group.add(new THREE.Mesh(envGeo, envMat));
+    // 建立單個 S 刺突蛋白複合幾何
+    const singleSpikeGroup = new THREE.Group();
+    const stalkMesh = new THREE.Mesh(
+      stalkGeo,
+      new THREE.MeshStandardMaterial({ color: 0xe84118, roughness: 0.4 })
+    );
+    stalkMesh.position.y = 0.6;
+    singleSpikeGroup.add(stalkMesh);
 
-    // Red Spikes (S Protein)
-    if (!isHologram) {
-      const sGroup = new THREE.Group();
-      
-      const stalkGeo = new THREE.CylinderGeometry(0.05, 0.1, 0.8, 8);
-      const stalkMat = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.4 });
-      const stalk = new THREE.Mesh(stalkGeo, stalkMat);
-      sGroup.add(stalk);
-      
-      // Tulip-like head for Spike
-      const headGroup = new THREE.Group();
-      const headGeo1 = new THREE.SphereGeometry(0.15, 12, 12);
-      const headGeo2 = new THREE.SphereGeometry(0.12, 12, 12);
-      const headMat = new THREE.MeshStandardMaterial({ color: 0xff6b81, roughness: 0.3 });
-      
-      const head1 = new THREE.Mesh(headGeo1, headMat);
-      head1.position.set(0, 0.4, 0);
-      const head2 = new THREE.Mesh(headGeo2, headMat);
-      head2.position.set(0.1, 0.5, 0);
-      const head3 = new THREE.Mesh(headGeo2, headMat);
-      head3.position.set(-0.1, 0.5, 0);
-      
-      headGroup.add(head1, head2, head3);
-      sGroup.add(headGroup);
-
-      const spikeCount = 60;
-      for(let i = 0; i < spikeCount; i++) {
-        const y = 1 - (i / (spikeCount - 1)) * 2;
-        if (isCutaway && y < -0.1) continue;
-        const tempR = Math.sqrt(1 - y*y);
-        const theta = Math.PI * (3 - Math.sqrt(5)) * i;
-        const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
-
-        const noise = Math.sin(norm.x * 3) * Math.cos(norm.y * 3) * Math.sin(norm.z * 3) * 0.15;
-        const spike = sGroup.clone();
-        spike.position.copy(norm).multiplyScalar(envRadius + noise + 0.3);
-        spike.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), norm);
-        group.add(spike);
-      }
-      
-      // E & M proteins (Small orange/yellow bumps)
-      const emGeo = new THREE.SphereGeometry(0.08, 8, 8);
-      const emMat = new THREE.MeshStandardMaterial({ color: 0xffa502, roughness: 0.8 });
-      for (let i = 0; i < 200; i++) {
-        const y = 1 - (i / 199) * 2;
-        if (isCutaway && y < -0.1) continue;
-        const tempR = Math.sqrt(1 - y*y);
-        const theta = Math.PI * (5 - Math.sqrt(21)) * i;
-        const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
-        
-        const noise = Math.sin(norm.x * 3) * Math.cos(norm.y * 3) * Math.sin(norm.z * 3) * 0.15;
-        const em = new THREE.Mesh(emGeo, emMat);
-        em.position.copy(norm).multiplyScalar(envRadius + noise + 0.02);
-        em.scale.set(1, 1, 0.5);
-        em.lookAt(new THREE.Vector3(0,0,0));
-        group.add(em);
-      }
+    // 三瓣頂部受體結合域 (RBD Head)
+    for (let i = 0; i < 3; i++) {
+      const angle = (i * Math.PI * 2) / 3;
+      const petal = new THREE.Mesh(
+        headGeo,
+        new THREE.MeshStandardMaterial({ color: 0xff4757, roughness: 0.3, metalness: 0.2 })
+      );
+      petal.scale.set(0.6, 0.7, 0.6);
+      petal.position.set(Math.sin(angle) * 0.22, 1.25, Math.cos(angle) * 0.22);
+      singleSpikeGroup.add(petal);
     }
 
-    if (isCutaway || isHologram) {
-       const rna = new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, 0.2, 100, 16, 3, 7), new THREE.MeshStandardMaterial({ color: 0xff7f50 }));
-       group.add(rna);
+    // 斐波那契球面均勻分佈刺突
+    const phi = Math.PI * (3 - Math.sqrt(5)); // 黃金角
+    for (let i = 0; i < spikeCount; i++) {
+      const y = 1 - (i / (spikeCount - 1)) * 2; // y 在 [-1, 1]
+      if (isCutaway && y < -0.2) continue; // 剖面模式切除下部
+
+      const radiusAtY = Math.sqrt(1 - y * y);
+      const theta = phi * i;
+      const x = Math.cos(theta) * radiusAtY;
+      const z = Math.sin(theta) * radiusAtY;
+
+      const spike = singleSpikeGroup.clone();
+      const pos = new THREE.Vector3(x, y, z).multiplyScalar(envRadius);
+      spike.position.copy(pos);
+      spike.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+      group.add(spike);
     }
+
+    // M (Membrane) & E 小蛋白粒 (表面密集小顆粒)
+    const mProteinGeo = new THREE.SphereGeometry(0.09, 8, 8);
+    const mProteinMat = new THREE.MeshStandardMaterial({ color: 0xffa502, roughness: 0.5 });
+    const mInstanced = new THREE.InstancedMesh(mProteinGeo, mProteinMat, 150);
+    const dummy = new THREE.Object3D();
+    let validM = 0;
+    for (let i = 0; i < 200; i++) {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phiAngle = Math.acos(2.0 * v - 1.0);
+      const sinPhi = Math.sin(phiAngle);
+      const y = Math.cos(phiAngle);
+      if (isCutaway && y < -0.25) continue;
+      if (validM >= 150) break;
+
+      const x = sinPhi * Math.cos(theta);
+      const z = sinPhi * Math.sin(theta);
+      dummy.position.set(x, y, z).multiplyScalar(envRadius + 0.05);
+      dummy.updateMatrix();
+      mInstanced.setMatrixAt(validM++, dummy.matrix);
+    }
+    mInstanced.count = validM;
+    group.add(mInstanced);
+
+    // 內部結構 (剖面模式下可見 RNA 螺旋與 N 核蛋白)
+    
+    const coreGroup = new THREE.Group();
+    coreGroup.name = "sars_coreGroup";
+    if (!isCutaway && !isHologram) coreGroup.visible = false;
+    {
+
+      
+      // RNA 螺旋曲線
+      const curvePoints = [];
+      const turns = 7;
+      const count = 250;
+      for (let i = 0; i < count; i++) {
+        const t = i / count;
+        const angle = t * Math.PI * 2 * turns;
+        const r = (1.8 * Math.sin(t * Math.PI)) + 0.2;
+        const x = Math.cos(angle) * r;
+        const z = Math.sin(angle) * r;
+        const y = (t - 0.5) * 3.5;
+        curvePoints.push(new THREE.Vector3(x, y, z));
+      }
+      const rnaCurve = new THREE.CatmullRomCurve3(curvePoints);
+      const rnaGeo = new THREE.TubeGeometry(rnaCurve, 200, 0.08, 8, false);
+      const rnaMat = new THREE.MeshStandardMaterial({
+        color: 0x00d2d3,
+        emissive: 0x015555,
+        roughness: 0.3
+      });
+      const rnaMesh = new THREE.Mesh(rnaGeo, rnaMat);
+      coreGroup.add(rnaMesh);
+
+      // N 蛋白小珍珠串
+      const nGeo = new THREE.SphereGeometry(0.12, 8, 8);
+      const nMat = new THREE.MeshStandardMaterial({ color: 0x54a0ff, roughness: 0.4 });
+      for (let i = 0; i < count; i += 4) {
+        const pt = curvePoints[i];
+        const nMesh = new THREE.Mesh(nGeo, nMat);
+        nMesh.position.copy(pt);
+        coreGroup.add(nMesh);
+      }
+
+      group.add(coreGroup);
+    }
+
     return group;
   },
 
+  // 2. Mpox (猴痘病毒 - 磚型雙層膜與啞鈴形核心)
   buildMpox(mode = "surface") {
     const group = new THREE.Group();
     group.name = "mpox";
