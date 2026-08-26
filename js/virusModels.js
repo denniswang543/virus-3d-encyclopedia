@@ -184,110 +184,110 @@ const VirusBuilder = {
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
-    // 圓角磚形外膜 (Rounded Brick / Lozenge)
-    const brickGroup = new THREE.Group();
-    const width = 4.2, height = 3.0, depth = 2.4;
+    // 橢圓形/圓角磚形外膜 (Rounded Oval/Brick)
+    const envRadius = 2.4;
+    // 使用高解析度球體來做形變
+    const envGeo = isCutaway ? new THREE.SphereGeometry(envRadius, 64, 64, 0, Math.PI * 2, 0, Math.PI * 0.55) : new THREE.SphereGeometry(envRadius, 64, 64);
+    
+    // 將球體拉長為經典的 Mpox 橢圓磚塊形
+    envGeo.scale(1.5, 1.0, 1.0);
 
-    if (!isCutaway || isHologram) {
-      const boxGeo = new THREE.BoxGeometry(width, height, depth, 16, 16, 16);
-      // 頂點圓角化變形
-      const pos = boxGeo.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-        const len = v.length();
-        v.normalize().multiplyScalar(Math.min(len, 2.3));
-        pos.setXYZ(i, v.x * 1.3, v.y * 1.0, v.z * 0.85);
+    if (!isHologram && !isCutaway) {
+      // 產生類似「大腦皺褶」的超精細凹凸紋理 (Brain-like convoluted ridges)
+      if (envGeo.attributes.position) {
+        const pos = envGeo.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+          const dist = v.length();
+          if (dist === 0) continue;
+          
+          // 複合高頻率 noise 製造細密皺褶
+          const noise1 = Math.sin(v.x * 5) * Math.cos(v.y * 5) * Math.sin(v.z * 5);
+          const noise2 = Math.sin(v.x * 12 + v.y * 8) * Math.cos(v.z * 10);
+          const totalNoise = (noise1 * 0.15) + (noise2 * 0.08);
+          
+          v.normalize().multiplyScalar(dist + totalNoise);
+          pos.setXYZ(i, v.x, v.y, v.z);
+        }
+        pos.needsUpdate = true;
+        envGeo.computeVertexNormals();
       }
-      boxGeo.computeVertexNormals();
-
-      const boxMat = isHologram
-        ? new THREE.MeshBasicMaterial({ color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.4 })
-        : new THREE.MeshStandardMaterial({ color: 0xb33939, roughness: 0.7, metalness: 0.1 });
-      const brickMesh = new THREE.Mesh(boxGeo, boxMat);
-      brickGroup.add(brickMesh);
-
-      // 表面密集微小管狀球體 (Surface Globules)
-      const globGeo = new THREE.SphereGeometry(0.1, 6, 6);
-      const globMat = new THREE.MeshStandardMaterial({ color: 0xff793f, roughness: 0.5 });
-      const globInstanced = new THREE.InstancedMesh(globGeo, globMat, 220);
-      const dummy = new THREE.Object3D();
-      for (let i = 0; i < 220; i++) {
-        const u = (Math.random() - 0.5) * width * 0.95;
-        const v = (Math.random() - 0.5) * height * 0.95;
-        const w = (Math.random() > 0.5 ? 1 : -1) * depth * 0.48;
-        dummy.position.set(u, v, w);
-        dummy.updateMatrix();
-        globInstanced.setMatrixAt(i, dummy.matrix);
-      }
-      brickGroup.add(globInstanced);
-    } else {
-      // 剖面模式：僅保留後半邊外膜
-      const halfBoxGeo = new THREE.BoxGeometry(width, height, depth * 0.5, 16, 16, 8);
-      const halfBoxMat = new THREE.MeshStandardMaterial({
-        color: 0xb33939,
-        roughness: 0.7,
-        side: THREE.DoubleSide
-      });
-      const halfBox = new THREE.Mesh(halfBoxGeo, halfBoxMat);
-      halfBox.position.z = -depth * 0.25;
-      brickGroup.add(halfBox);
     }
-    group.add(brickGroup);
 
-    // 內部結構：側體 (Lateral Bodies) + 啞鈴形核心 (Dumbbell Core) + dsDNA
-    if (isCutaway || isHologram) {
-      const innerGroup = new THREE.Group();
+    const envMat = isHologram
+      ? new THREE.MeshBasicMaterial({ color: 0xd980fa, wireframe: true, transparent: true, opacity: 0.4 })
+      : new THREE.MeshStandardMaterial({ color: 0x6F1E51, roughness: 0.8, metalness: 0.1, side: THREE.DoubleSide });
+      
+    group.add(new THREE.Mesh(envGeo, envMat));
 
-      // 啞鈴形核心 (由兩側球體 + 中間細圓柱連接而成)
-      const coreMat = new THREE.MeshStandardMaterial({
-        color: 0xffb142,
-        roughness: 0.4,
-        metalness: 0.2,
-        side: THREE.DoubleSide
-      });
+    // 內部結構 (Core & Lateral Bodies)
+    if (isCutaway) {
+      // 啞鈴形核心 (Dumbbell Core)
+      const coreGeo = new THREE.CylinderGeometry(0.8, 0.8, 3.2, 32);
+      coreGeo.rotateZ(Math.PI / 2);
+      const coreMat = new THREE.MeshStandardMaterial({ color: 0x833471, roughness: 0.6 });
+      group.add(new THREE.Mesh(coreGeo, coreMat));
 
-      const sphereLeft = new THREE.Mesh(new THREE.SphereGeometry(1.0, 24, 24), coreMat);
-      sphereLeft.position.x = -1.2;
-      sphereLeft.scale.set(1, 0.85, 0.7);
+      // 兩側側體 (Lateral Bodies)
+      const lateralGeo = new THREE.SphereGeometry(0.7, 32, 32);
+      const lateralMat = new THREE.MeshStandardMaterial({ color: 0xFDA7DF, roughness: 0.5 });
+      const lb1 = new THREE.Mesh(lateralGeo, lateralMat);
+      lb1.scale.set(1.5, 1, 0.5);
+      lb1.position.set(0, 1.2, 0);
+      const lb2 = lb1.clone();
+      lb2.position.set(0, -1.2, 0);
+      group.add(lb1);
+      group.add(lb2);
+    }
 
-      const sphereRight = new THREE.Mesh(new THREE.SphereGeometry(1.0, 24, 24), coreMat);
-      sphereRight.position.x = 1.2;
-      sphereRight.scale.set(1, 0.85, 0.7);
+    // 表面密集細小刺突 (Fine surface tubules/spikes)
+    if (!isHologram) {
+      const spikeGroup = new THREE.Group();
+      // 短柱體
+      const stalk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.02, 0.04, 0.3, 5),
+        new THREE.MeshStandardMaterial({ color: 0xFDA7DF })
+      );
+      stalk.position.y = 0.15;
+      // 微小白亮突起頭部
+      const head = new THREE.Mesh(
+        new THREE.SphereGeometry(0.04, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffcccc })
+      );
+      head.position.y = 0.32;
+      spikeGroup.add(stalk);
+      spikeGroup.add(head);
 
-      const centerWaist = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.4, 24), coreMat);
-      centerWaist.rotation.z = Math.PI / 2;
-      centerWaist.scale.set(1, 1, 0.65);
-
-      innerGroup.add(sphereLeft);
-      innerGroup.add(sphereRight);
-      innerGroup.add(centerWaist);
-
-      // 兩側側體 (Lateral Bodies - 位於啞鈴腰部凹陷處)
-      const lateralMat = new THREE.MeshStandardMaterial({ color: 0x706fd3, roughness: 0.5 });
-      const lateralTop = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), lateralMat);
-      lateralTop.position.set(0, 0.95, 0);
-      lateralTop.scale.set(1.4, 0.5, 0.6);
-
-      const lateralBottom = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), lateralMat);
-      lateralBottom.position.set(0, -0.95, 0);
-      lateralBottom.scale.set(1.4, 0.5, 0.6);
-
-      innerGroup.add(lateralTop);
-      innerGroup.add(lateralBottom);
-
-      // 大型雙鏈 DNA 密集線圈 (在核心內部)
-      const dnaMat = new THREE.MeshBasicMaterial({ color: 0x33d9b2, wireframe: true });
-      const dnaMesh = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.25, 12, 32), dnaMat);
-      dnaMesh.position.z = 0.1;
-      innerGroup.add(dnaMesh);
-
-      group.add(innerGroup);
+      const spikeCount = 600;
+      const phi = Math.PI * (3 - Math.sqrt(5));
+      for (let i = 0; i < spikeCount; i++) {
+        const y = 1 - (i / (spikeCount - 1)) * 2;
+        if (isCutaway && y < -0.1) continue;
+        const tempR = Math.sqrt(1 - y * y);
+        const theta = phi * i;
+        
+        // 算出在球體上的分佈點，再做一樣的變形拉長
+        const norm = new THREE.Vector3(Math.cos(theta) * tempR, y, Math.sin(theta) * tempR);
+        const pos = norm.clone();
+        pos.x *= 1.5; // 對應 envGeo.scale(1.5, 1.0, 1.0)
+        
+        // 加入相同 noise 的偏移量，讓刺突能貼齊皺褶表面
+        const noise1 = Math.sin(pos.x * 5) * Math.cos(pos.y * 5) * Math.sin(pos.z * 5);
+        const noise2 = Math.sin(pos.x * 12 + pos.y * 8) * Math.cos(pos.z * 10);
+        const totalNoise = (noise1 * 0.15) + (noise2 * 0.08);
+        
+        // 取法向量 (稍微近似)
+        const spike = spikeGroup.clone();
+        const baseRadius = 2.4;
+        spike.position.copy(pos).normalize().multiplyScalar(baseRadius * pos.length() / 2.4 + totalNoise);
+        spike.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+        group.add(spike);
+      }
     }
 
     return group;
   },
 
-  // 3. Influenza A / H5N1 (甲型流感 - HA/NA 雙刺突與 8 條分節 RNA)
     buildInfluenzaA(mode = "surface") {
     const group = new THREE.Group();
     group.name = "influenza-a";
