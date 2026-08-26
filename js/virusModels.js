@@ -188,15 +188,15 @@ const VirusBuilder = {
     if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.2, 3);
 
     // Blue envelope
-    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0x0984e3, roughness: 0.7, side: THREE.DoubleSide });
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x8e44ad, wireframe: true, transparent: true, opacity: 0.4 })
+                              : new THREE.MeshStandardMaterial({ color: 0x8e44ad, roughness: 0.7, side: THREE.DoubleSide });
     group.add(new THREE.Mesh(envGeo, envMat));
 
     if (!isHologram) {
       // Cyan HA spikes
       const haGeo = new THREE.Group();
-      haGeo.add(new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 1.1, 6), new THREE.MeshStandardMaterial({ color: 0x00cec9 })));
-      const haHead = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), new THREE.MeshStandardMaterial({ color: 0x00cec9 }));
+      haGeo.add(new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 1.1, 6), new THREE.MeshStandardMaterial({ color:  0x0984e3  })));
+      const haHead = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), new THREE.MeshStandardMaterial({ color:  0x0984e3 }));
       haHead.position.y = 0.5;
       haGeo.add(haHead);
 
@@ -345,7 +345,7 @@ const VirusBuilder = {
     const shellGroup = new THREE.Group();
     const dimerGeo = new THREE.BoxGeometry(0.35, 0.12, 0.85);
     const dimerMat = isHologram
-      ? new THREE.MeshBasicMaterial({ color: 0x2bcbba, wireframe: true, opacity: 0.5 })
+      ? new THREE.MeshBasicMaterial({ color: 0x9b59b6, wireframe: true, opacity: 0.5 })
       : new THREE.MeshStandardMaterial({
           color: 0x0fbcf9,
           roughness: 0.4,
@@ -382,7 +382,7 @@ const VirusBuilder = {
       : new THREE.SphereGeometry(radius * 0.88, 32, 32);
 
     const innerEnvMat = isHologram
-      ? new THREE.MeshBasicMaterial({ color: 0x20bf6b, wireframe: true })
+      ? new THREE.MeshBasicMaterial({ color: 0xf1c40f, wireframe: true })
       : new THREE.MeshStandardMaterial({ color: 0x05c46b, roughness: 0.6, side: THREE.DoubleSide });
     group.add(new THREE.Mesh(innerEnvGeo, innerEnvMat));
 
@@ -418,8 +418,8 @@ const VirusBuilder = {
     const bulletGroup = new THREE.Group();
 
     // Dark teal/green body
-    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x16a085, wireframe: true, transparent: true, opacity: 0.4 })
-                           : new THREE.MeshStandardMaterial({ color: 0x16a085, roughness: 0.8, side: THREE.DoubleSide });
+    const mat = isHologram ? new THREE.MeshBasicMaterial({ color:  0x00d2d3 , wireframe: true, transparent: true, opacity: 0.4 })
+                           : new THREE.MeshStandardMaterial({ color:  0x00d2d3, roughness: 0.8, side: THREE.DoubleSide });
 
     const cylGeo = isCutaway ? new THREE.CylinderGeometry(bodyRadius, bodyRadius, bodyHeight, 32, 1, false, 0, Math.PI * 1.1) : new THREE.CylinderGeometry(bodyRadius, bodyRadius, bodyHeight, 32);
     const domeGeo = isCutaway ? new THREE.SphereGeometry(bodyRadius, 32, 16, 0, Math.PI * 1.1, 0, Math.PI * 0.5) : new THREE.SphereGeometry(bodyRadius, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5);
@@ -434,7 +434,7 @@ const VirusBuilder = {
     if (!isHologram) {
       // Light green spikes
       const spikeGeo = new THREE.CylinderGeometry(0.04, 0.08, 0.5, 6);
-      const spikeMat = new THREE.MeshStandardMaterial({ color: 0x78e08f, roughness: 0.5 });
+      const spikeMat = new THREE.MeshStandardMaterial({ color:  0x6c5ce7, roughness: 0.5 });
       
       const pos = cylGeo.attributes.position;
       for (let i = 0; i < pos.count; i += 12) {
@@ -474,16 +474,16 @@ const VirusBuilder = {
     const envGeo = isCutaway ? new THREE.SphereGeometry(envRadius, 64, 64, 0, Math.PI * 2, 0, Math.PI * 0.55) : new THREE.SphereGeometry(envRadius, 64, 64);
     if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.15, 4);
 
-    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x5f27cd, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0x341f97, roughness: 0.8, side: THREE.DoubleSide });
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color:  0xd980fa , wireframe: true, transparent: true, opacity: 0.4 })
+                              : new THREE.MeshStandardMaterial({ color:  0xd980fa, roughness: 0.8, side: THREE.DoubleSide });
     group.add(new THREE.Mesh(envGeo, envMat));
 
     // Spikes (gp120 / gp41) - Magenta and Cyan
     if (!isHologram) {
       const spikeGeo = new THREE.CylinderGeometry(0.08, 0.15, 0.8, 8);
-      const spikeMat = new THREE.MeshStandardMaterial({ color: 0x0abde3, roughness: 0.4 }); // Cyan stalk
+      const spikeMat = new THREE.MeshStandardMaterial({ color:  0x12cbc4, roughness: 0.4 }); // Cyan stalk
       const knobGeo = new THREE.SphereGeometry(0.25, 16, 16);
-      const knobMat = new THREE.MeshStandardMaterial({ color: 0xff9ff3, roughness: 0.4 }); // Magenta knob
+      const knobMat = new THREE.MeshStandardMaterial({ color:  0x5758bb, roughness: 0.4 }); // Magenta knob
 
       const spikeCount = 30; // HIV has very few spikes, but let's make it match the dense cartoonish look of the ref
       const phi = Math.PI * (3 - Math.sqrt(5));
@@ -529,14 +529,14 @@ const VirusBuilder = {
     if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.1, 4.5);
     
     // Bright orange to match image
-    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xff9f43, wireframe: true, transparent: true, opacity: 0.4 }) 
-                              : new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.7, side: THREE.DoubleSide });
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color:  0x00d2d3 , wireframe: true, transparent: true, opacity: 0.4 }) 
+                              : new THREE.MeshStandardMaterial({ color:  0x00d2d3, roughness: 0.7, side: THREE.DoubleSide });
     group.add(new THREE.Mesh(envGeo, envMat));
 
     // Dark orange dense bumps
     if (!isHologram) {
       const spikeGeo = new THREE.SphereGeometry(0.18, 12, 12);
-      const spikeMat = new THREE.MeshStandardMaterial({ color: 0xd35400, roughness: 0.8 });
+      const spikeMat = new THREE.MeshStandardMaterial({ color:  0x0a3d62, roughness: 0.8 });
       const spikeCount = 120;
       for (let i = 0; i < spikeCount; i++) {
         const y = 1 - (i / (spikeCount-1)) * 2;
@@ -570,10 +570,11 @@ const VirusBuilder = {
     const group = this.buildDengue(mode);
     group.name = "zika";
     if (mode === "surface") {
+         group.children[0].material.color.setHex(0x1abc9c);
        group.children.forEach(c => {
          if (c.material && c.material.color) {
-            if (c.material.color.getHex() === 0x2bcbba) c.material.color.setHex(0xe84393);
-            if (c.material.color.getHex() === 0x20bf6b) c.material.color.setHex(0xfd79a8);
+            if (c.material.color.getHex() === 0x9b59b6) c.material.color.setHex(0xe84393);
+            if (c.material.color.getHex() === 0xf1c40f) c.material.color.setHex(0x74b9ff);
          }
        });
     } else if (mode === "hologram" && group.children.length > 0) {
@@ -606,8 +607,8 @@ const VirusBuilder = {
       vp7Geo.computeVertexNormals();
     }
 
-    const vp7Mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0x4cd137, roughness: 0.7, bumpScale: 0.2, side: THREE.DoubleSide });
+    const vp7Mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x8e44ad, wireframe: true, transparent: true, opacity: 0.4 })
+                              : new THREE.MeshStandardMaterial({ color:  0x0984e3, roughness: 0.7, bumpScale: 0.2, side: THREE.DoubleSide });
     const vp7 = new THREE.Mesh(vp7Geo, vp7Mat);
     group.add(vp7);
 
@@ -621,7 +622,7 @@ const VirusBuilder = {
       const cupInnerGeo = new THREE.CylinderGeometry(0.25, 0.05, 0.3, 16, 1, true); // Inner wall to give thickness
       const lipGeo = new THREE.TorusGeometry(0.3, 0.03, 8, 16); // Rim of the cup
 
-      const spikeMat = new THREE.MeshStandardMaterial({ color: 0xff6b81, roughness: 0.5, side: THREE.DoubleSide });
+      const spikeMat = new THREE.MeshStandardMaterial({ color:  0xd63031, roughness: 0.5, side: THREE.DoubleSide });
       const innerMat = new THREE.MeshStandardMaterial({ color: 0xc23616, roughness: 0.8, side: THREE.DoubleSide }); // Darker inside
       
       const stalk = new THREE.Mesh(stalkGeo, spikeMat);
@@ -718,7 +719,7 @@ const VirusBuilder = {
       group.add(new THREE.Mesh(tegGeo, tegMat));
 
       const capGeo = new THREE.IcosahedronGeometry(1.5, 1);
-      const capMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true })
+      const capMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x8e44ad, wireframe: true })
                                 : this.createBiomaterial(0x74b9ff, 0.4, 0.3);
       group.add(new THREE.Mesh(capGeo, capMat));
     }
@@ -825,8 +826,8 @@ const VirusBuilder = {
       geo.computeVertexNormals();
     }
 
-    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x0984e3, wireframe: true })
-                           : new THREE.MeshStandardMaterial({ color: 0x0984e3, roughness: 0.6, bumpScale: 0.1 });
+    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x8e44ad, wireframe: true })
+                           : new THREE.MeshStandardMaterial({ color: 0x8e44ad, roughness: 0.6, bumpScale: 0.1 });
     const cap = new THREE.Mesh(geo, mat);
     group.add(cap);
 
@@ -852,7 +853,7 @@ const VirusBuilder = {
       const centerOffset = -0.5 * (starGeo.boundingBox.max.z - starGeo.boundingBox.min.z);
       starGeo.translate(0, 0, centerOffset);
       
-      const starMat = new THREE.MeshStandardMaterial({ color: 0xfeca57, roughness: 0.5 });
+      const starMat = new THREE.MeshStandardMaterial({ color:  0x9b59b6, roughness: 0.5 });
       
       // Distribute stars on vertices of a simpler icosahedron
       const distIco = new THREE.IcosahedronGeometry(radius, 1);
@@ -904,21 +905,21 @@ const VirusBuilder = {
     }
 
     const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xe15f41, wireframe: true, transparent: true, opacity: 0.4 })
-                              : new THREE.MeshStandardMaterial({ color: 0xf3a683, roughness: 0.8, bumpScale: 0.2 });
+                              : new THREE.MeshStandardMaterial({ color:  0xfeca57, roughness: 0.8, bumpScale: 0.2 });
     const envelope = new THREE.Mesh(envGeo, envMat);
     group.add(envelope);
 
     if (!isHologram) {
       // Compound H spike (Hemagglutinin - mushroom like)
       const hGroup = new THREE.Group();
-      hGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.4, 8), new THREE.MeshStandardMaterial({ color: 0xc44569 })));
+      hGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.4, 8), new THREE.MeshStandardMaterial({ color:  0xe84118 })));
       const hHead = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), new THREE.MeshStandardMaterial({ color: 0xc44569 }));
       hHead.position.y = 0.2;
       hGroup.add(hHead);
 
       // Compound F spike (Fusion - needle/cone like)
       const fGroup = new THREE.Group();
-      fGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.06, 0.5, 8), new THREE.MeshStandardMaterial({ color: 0x546de5 })));
+      fGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.06, 0.5, 8), new THREE.MeshStandardMaterial({ color:  0xfd79a8 })));
       const fHead = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.08, 0.15, 8), new THREE.MeshStandardMaterial({ color: 0x546de5 }));
       fHead.position.y = 0.25;
       fGroup.add(fHead);
@@ -1565,7 +1566,7 @@ const VirusBuilder = {
       // 1. Translucent Blue Icosahedron Shell (matching the classic textbook art)
       const shellGeo = new THREE.IcosahedronGeometry(radius, 0); 
       const shellMat = new THREE.MeshStandardMaterial({
-         color: 0x0984e3,
+         color: 0x8e44ad,
          roughness: 0.3,
          metalness: 0.2,
          flatShading: true, // gives the distinct flat faces
@@ -1761,8 +1762,132 @@ const VirusBuilder = {
     geo.computeVertexNormals();
   },
 
+
+  buildPolio(mode = "surface") {
+    const group = new THREE.Group();
+    group.name = "polio";
+    const isCutaway = mode === "cutaway";
+    const isHologram = mode === "hologram";
+
+    const capsidGroup = new THREE.Group();
+    
+    if (!isHologram) {
+      const baseGeo = new THREE.IcosahedronGeometry(2.4, 2);
+      const capsomereGeo = new THREE.SphereGeometry(0.45, 16, 16);
+      
+      const matBase = new THREE.MeshStandardMaterial({ color: 0x1e3799, roughness: 0.6 }); // dark blue
+      const matOrange = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.6 });
+      const matRed = new THREE.MeshStandardMaterial({ color: 0xc0392b, roughness: 0.6 });
+      
+      if (isCutaway) [matBase, matOrange, matRed].forEach(m => { m.transparent = true; m.opacity = 0.4; });
+
+      const pos = baseGeo.attributes.position;
+      const added = [];
+      for (let i = 0; i < pos.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        if (!added.find(a => a.distanceTo(v) < 0.1)) {
+          added.push(v);
+          if (isCutaway && v.y < -0.2) continue;
+          
+          let mat = matBase;
+          if (i % 5 === 0) mat = matOrange;
+          else if (i % 7 === 0) mat = matRed;
+
+          const cap = new THREE.Mesh(capsomereGeo, mat);
+          const noise = Math.sin(v.x*4)*Math.cos(v.y*4)*Math.sin(v.z*4);
+          cap.position.copy(v).normalize().multiplyScalar(2.6 + noise * 0.15);
+          cap.lookAt(new THREE.Vector3(0,0,0));
+          cap.scale.set(1, 1, 0.7);
+          capsidGroup.add(cap);
+        }
+      }
+    } else {
+      capsidGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.8, 2), new THREE.MeshBasicMaterial({ color: 0x1e3799, wireframe: true })));
+    }
+    group.add(capsidGroup);
+    return group;
+  },
+
+  buildHCV(mode = "surface") {
+    const group = new THREE.Group();
+    group.name = "hcv";
+    const isCutaway = mode === "cutaway";
+    const isHologram = mode === "hologram";
+
+    const envRadius = 2.8;
+    const envGeo = isCutaway ? new THREE.SphereGeometry(envRadius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.55) : new THREE.SphereGeometry(envRadius, 48, 48);
+    if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.15, 3);
+    
+    // Cyan envelope
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0x00d2d3, wireframe: true }) : new THREE.MeshStandardMaterial({ color: 0x00d2d3, roughness: 0.7, side: THREE.DoubleSide });
+    group.add(new THREE.Mesh(envGeo, envMat));
+
+    // Purple spikes
+    if (!isHologram) {
+       const spikeGeo = new THREE.CylinderGeometry(0.08, 0.1, 0.8, 6);
+       const spikeMat = new THREE.MeshStandardMaterial({ color: 0x9b59b6, roughness: 0.5 });
+       for(let i=0; i<80; i++) {
+          const y = 1 - (i / 79) * 2;
+          if (isCutaway && y < -0.1) continue;
+          const tempR = Math.sqrt(1 - y*y);
+          const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+          const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
+          
+          const noise = Math.sin(norm.x*3)*Math.cos(norm.y*3)*Math.sin(norm.z*3)*0.15;
+          const spike = new THREE.Mesh(spikeGeo, spikeMat);
+          spike.position.copy(norm).multiplyScalar(envRadius + noise + 0.3);
+          spike.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), norm);
+          group.add(spike);
+       }
+    }
+    return group;
+  },
+
+  buildRubella(mode = "surface") {
+    const group = new THREE.Group();
+    group.name = "rubella";
+    const isCutaway = mode === "cutaway";
+    const isHologram = mode === "hologram";
+
+    const envRadius = 2.7;
+    const envGeo = isCutaway ? new THREE.SphereGeometry(envRadius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.55) : new THREE.SphereGeometry(envRadius, 48, 48);
+    if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.2, 2.5);
+    
+    // Magenta envelope
+    const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xe84393, wireframe: true }) : new THREE.MeshStandardMaterial({ color: 0xe84393, roughness: 0.7, side: THREE.DoubleSide });
+    group.add(new THREE.Mesh(envGeo, envMat));
+
+    // Pink club spikes
+    if (!isHologram) {
+       const spikeGroup = new THREE.Group();
+       spikeGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.08, 0.8, 6), new THREE.MeshStandardMaterial({ color: 0xfd79a8 })));
+       const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), new THREE.MeshStandardMaterial({ color: 0x6c5ce7 })); // darker purple head
+       head.position.y = 0.4;
+       spikeGroup.add(head);
+
+       for(let i=0; i<120; i++) {
+          const y = 1 - (i / 119) * 2;
+          if (isCutaway && y < -0.1) continue;
+          const tempR = Math.sqrt(1 - y*y);
+          const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+          const norm = new THREE.Vector3(Math.cos(theta)*tempR, y, Math.sin(theta)*tempR).normalize();
+          
+          const noise = Math.sin(norm.x*2.5)*Math.cos(norm.y*2.5)*Math.sin(norm.z*2.5)*0.2;
+          const spike = spikeGroup.clone();
+          spike.position.copy(norm).multiplyScalar(envRadius + noise + 0.3);
+          spike.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), norm);
+          group.add(spike);
+       }
+    }
+    return group;
+  },
+
   createVirus(virusId, mode = "surface") {
     switch (virusId) {
+
+        case "polio": return this.buildPolio(mode);
+        case "hcv": return this.buildHCV(mode);
+        case "rubella": return this.buildRubella(mode);
         case "vzv": return this.buildVZV(mode);
 
 
