@@ -894,6 +894,7 @@ const VirusBuilder = {
     // Envelope
     const radius = 2.8;
     const envGeo = isCutaway ? new THREE.SphereGeometry(radius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.SphereGeometry(radius, 48, 48);
+      if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.2, 3.5);
     const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xf1c40f, wireframe: true, transparent: true, opacity: 0.4 }) 
                               : this.createBiomaterial(0xffda79, 0.6, 0.2);
     const envelope = new THREE.Mesh(envGeo, envMat);
@@ -1058,6 +1059,7 @@ const VirusBuilder = {
     // Envelope
     const radius = 3.5;
     const envGeo = isCutaway ? new THREE.SphereGeometry(radius, 48, 48, 0, Math.PI * 2, 0, Math.PI * 0.6) : new THREE.SphereGeometry(radius, 48, 48);
+      if (!isHologram && !isCutaway) this.makeOrganic(envGeo, 0.2, 3.5);
     const envMat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xff7675, wireframe: true, transparent: true, opacity: 0.4 })
                               : this.createBiomaterial(0xd63031, 0.7, 0.1);
     const env = new THREE.Mesh(envGeo, envMat);
@@ -1523,30 +1525,48 @@ const VirusBuilder = {
     return group;
   },
 
-  buildTMV(mode = "surface") {
+    buildTMV(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
     
-    const geo = isCutaway ? new THREE.CylinderGeometry(1.5, 1.5, 6, 32, 1, false, 0, Math.PI) : new THREE.CylinderGeometry(1.5, 1.5, 6, 32);
-    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xbadc58, wireframe: true }) : this.createBiomaterial(0x6ab04c, 0.7, 0.2);
-    group.add(new THREE.Mesh(geo, mat));
+    if (!isHologram) {
+      const capsidGroup = new THREE.Group();
+      const capGeo = new THREE.SphereGeometry(0.18, 12, 12);
+      const capMat = new THREE.MeshStandardMaterial({ color: 0xbadc58, roughness: 0.6, transparent: isCutaway, opacity: isCutaway ? 0.4 : 1 });
+      
+      const RNAgeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+         new THREE.Vector3(0, -3, 0), new THREE.Vector3(0, 3, 0)
+      ]), 100, 0.08, 8, false);
+      const RNAMat = new THREE.MeshStandardMaterial({ color: 0xff4757 });
+      const rnaSpiral = new THREE.Group();
 
-    // Spiral structure visual
-    if (!isHologram && !isCutaway) {
-      const spiralGeo = new THREE.TorusGeometry(1.55, 0.1, 8, 32, Math.PI*2);
-      const spiralMat = this.createBiomaterial(0xeb4d4b, 0.4, 0.1);
-      for(let i=0; i<15; i++) {
-        const t = new THREE.Mesh(spiralGeo, spiralMat);
-        t.position.y = -2.8 + i*0.4;
-        group.add(t);
+      // Helical assembly
+      let y = -3;
+      let angle = 0;
+      while (y < 3) {
+        if (!(isCutaway && y > 0 && Math.cos(angle) > 0)) {
+           const cap = new THREE.Mesh(capGeo, capMat);
+           cap.position.set(Math.cos(angle)*1.0, y, Math.sin(angle)*1.0);
+           capsidGroup.add(cap);
+        }
+        
+        if (y % 0.2 < 0.05) {
+           const rPiece = new THREE.Mesh(new THREE.SphereGeometry(0.06), RNAMat);
+           rPiece.position.set(Math.cos(angle)*0.6, y, Math.sin(angle)*0.6);
+           rnaSpiral.add(rPiece);
+        }
+
+        y += 0.02;
+        angle += 0.3;
       }
-    }
-
-    if (isCutaway || isHologram) {
-      const rnaGeo = new THREE.CylinderGeometry(0.5, 0.5, 5.8, 16);
-      const rnaMat = new THREE.MeshBasicMaterial({ color: 0xeb4d4b, wireframe: true });
-      group.add(new THREE.Mesh(rnaGeo, rnaMat));
+      group.add(capsidGroup);
+      if (isCutaway) group.add(rnaSpiral);
+      
+    } else {
+      const geo = new THREE.CylinderGeometry(1.2, 1.2, 6, 16);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xbadc58, wireframe: true });
+      group.add(new THREE.Mesh(geo, mat));
     }
     return group;
   },
@@ -1742,36 +1762,43 @@ const VirusBuilder = {
     return group;
   },
 
-  buildOrf(mode = "surface") {
+    buildOrf(mode = "surface") {
     const group = new THREE.Group();
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
-    const radius = 2.5;
-    const geo = isCutaway ? new THREE.SphereGeometry(radius, 64, 64, 0, Math.PI) : new THREE.SphereGeometry(radius, 64, 64);
-    geo.scale(1.2, 1.5, 1.2); // Oval shape
-    const mat = isHologram ? new THREE.MeshBasicMaterial({ color: 0xff7979, wireframe: true }) : this.createBiomaterial(0xff4d4d, 0.6, 0.2);
-    
-    // Criss-cross yarn displacement
-    if (!isHologram && !isCutaway) {
-      const pos = geo.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-        const theta = Math.atan2(v.x, v.z);
-        const phi = Math.acos(v.y / (radius * 1.5));
-        // Yarn pattern
-        const bump = Math.sin(theta*15 + phi*10) * Math.sin(theta*15 - phi*10);
-        v.multiplyScalar(1 + bump * 0.02);
-        pos.setXYZ(i, v.x, v.y, v.z);
-      }
-      geo.computeVertexNormals();
-    }
-    group.add(new THREE.Mesh(geo, mat));
-
-    if (isCutaway || isHologram) {
-      const coreGeo = new THREE.BoxGeometry(2, 3, 2);
-      const coreMat = new THREE.MeshBasicMaterial({ color: 0x4834d4, wireframe: true });
+    // Orf virus (Parapoxvirus) has a highly distinctive oval "ball of yarn" structure
+    if (!isHologram) {
+      // Create a dense spiral filament wrapping an oval core
+      const coreGeo = new THREE.SphereGeometry(1.8, 32, 32);
+      coreGeo.scale(1, 1.4, 1);
+      const coreMat = new THREE.MeshStandardMaterial({ color: 0xc8d6e5, roughness: 0.8, transparent: isCutaway, opacity: 0.3 });
       group.add(new THREE.Mesh(coreGeo, coreMat));
+
+      // The yarn wrap (using a dense TorusKnot to simulate spiral filaments)
+      const yarnGeo = new THREE.TorusKnotGeometry(1.4, 0.15, 300, 16, 13, 21);
+      yarnGeo.scale(1, 1.4, 1); // stretch into oval
+      const yarnMat = new THREE.MeshStandardMaterial({ color: 0xff7979, roughness: 0.5 });
+      const yarn = new THREE.Mesh(yarnGeo, yarnMat);
+      
+      if (isCutaway) {
+         // Cutaway of yarn using clipping planes or just skipping (since it's a single geo, scaling down is easier or we just use transparency)
+         yarn.material.transparent = true;
+         yarn.material.opacity = 0.5;
+      }
+      group.add(yarn);
+
+      if (isCutaway) {
+         // Inner dumbbell DNA core
+         const dumbGeo = new THREE.CylinderGeometry(0.6, 0.6, 2.0, 16);
+         const dumbMat = new THREE.MeshStandardMaterial({ color: 0xee5253, roughness: 0.5 });
+         group.add(new THREE.Mesh(dumbGeo, dumbMat));
+      }
+    } else {
+      const geo = new THREE.SphereGeometry(2, 16, 16);
+      geo.scale(1, 1.4, 1);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xff7979, wireframe: true });
+      group.add(new THREE.Mesh(geo, mat));
     }
     return group;
   },
@@ -1898,79 +1925,88 @@ const VirusBuilder = {
 
   
   // === NEW VIRUSES ===
-  buildAdenovirus(mode = "surface") {
+    buildAdenovirus(mode = "surface") {
     const group = new THREE.Group();
     group.name = "adenovirus";
     const isCutaway = mode === "cutaway";
     const isHologram = mode === "hologram";
 
     const radius = 3.0;
-    const geo = new THREE.IcosahedronGeometry(radius, 2);
+    const capsidGroup = new THREE.Group();
     
-    const mat = isHologram
-      ? new THREE.MeshBasicMaterial({ color: 0x00d2d3, wireframe: true, transparent: true, opacity: 0.5 })
-      : new THREE.MeshStandardMaterial({
-          color: 0x0abde3,
-          roughness: 0.6,
-          metalness: 0.1,
-          flatShading: true,
-          transparent: isCutaway,
-          opacity: isCutaway ? 0.2 : 1.0,
-          side: THREE.DoubleSide
-        });
-    const capsid = new THREE.Mesh(geo, mat);
-    capsid.name = "adenovirus_capsid";
-    group.add(capsid);
+    if (!isHologram) {
+      // High-poly capsomere assembly for Adenovirus (252 capsomeres)
+      const baseGeo = new THREE.IcosahedronGeometry(2.8, 3); // Very dense
+      const capsomereGeo = new THREE.CylinderGeometry(0.2, 0.15, 0.3, 6); // Hexons
+      
+      const mat = new THREE.MeshStandardMaterial({ 
+          color: 0x0abde3, roughness: 0.7, metalness: 0.1,
+          transparent: isCutaway, opacity: isCutaway ? 0.3 : 1.0 
+      });
+      
+      const pos = baseGeo.attributes.position;
+      const added = [];
+      const vertices = []; // save 12 original vertices for fibers
+      const origIco = new THREE.IcosahedronGeometry(2.8, 0);
+      
+      for(let i=0; i<origIco.attributes.position.count; i++) {
+         vertices.push(new THREE.Vector3().fromBufferAttribute(origIco.attributes.position, i));
+      }
 
-    // Penton fibers (12 vertices of an icosahedron)
-    const baseIco = new THREE.IcosahedronGeometry(radius, 0);
-    const vertices = [];
-    const pos = baseIco.attributes.position;
-    for(let i=0; i<pos.count; i+=3) {
-      // get unique vertices (approximate by rounding)
-      const v = new THREE.Vector3().fromBufferAttribute(pos, i);
-      vertices.push(v);
+      for (let i = 0; i < pos.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        if (!added.find(a => a.distanceTo(v) < 0.2)) {
+          added.push(v);
+          if (isCutaway && v.y < -0.2) continue;
+          
+          const cap = new THREE.Mesh(capsomereGeo, mat);
+          cap.position.copy(v);
+          cap.lookAt(new THREE.Vector3(0,0,0));
+          cap.rotation.x -= Math.PI/2;
+          capsidGroup.add(cap);
+        }
+      }
+      
+      // Fibers
+      const fiberGroup = new THREE.Group();
+      const stalkGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.8, 5);
+      const knobGeo = new THREE.SphereGeometry(0.18, 16, 16);
+      const fiberMat = new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.4 });
+      
+      vertices.forEach(v => {
+         let isUnique = true;
+         for(let c of fiberGroup.children) { if (c.position.distanceTo(v) < 0.1) isUnique = false; }
+         if (isUnique) {
+             const stalk = new THREE.Mesh(stalkGeo, fiberMat);
+             stalk.position.copy(v).normalize().multiplyScalar(2.8 + 0.9);
+             stalk.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), v.clone().normalize());
+             
+             const knob = new THREE.Mesh(knobGeo, fiberMat);
+             knob.position.copy(v).normalize().multiplyScalar(2.8 + 1.8);
+             
+             fiberGroup.add(stalk);
+             fiberGroup.add(knob);
+         }
+      });
+      group.add(fiberGroup);
+
+    } else {
+      const geo = new THREE.IcosahedronGeometry(radius, 2);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x0abde3, wireframe: true, transparent: isCutaway, opacity: 0.5 });
+      capsidGroup.add(new THREE.Mesh(geo, mat));
     }
     
-    // De-duplicate vertices
-    const uniqueVerts = [];
-    vertices.forEach(v => {
-        if (!uniqueVerts.find(uv => uv.distanceTo(v) < 0.1)) {
-            uniqueVerts.push(v);
-        }
-    });
-
-    const fiberStalkGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.5, 5);
-    const fiberKnobGeo = new THREE.SphereGeometry(0.2, 16, 16);
-    const fiberMat = isHologram 
-        ? new THREE.MeshBasicMaterial({ color: 0xff9f43, wireframe: true })
-        : new THREE.MeshStandardMaterial({ color: 0xff9f43, roughness: 0.4, emissive: 0xff9f43, emissiveIntensity: 0.2 });
-
-    uniqueVerts.forEach(v => {
-      const dir = v.clone().normalize();
-      
-      const stalk = new THREE.Mesh(fiberStalkGeo, fiberMat);
-      stalk.position.copy(v).add(dir.clone().multiplyScalar(0.75));
-      stalk.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
-      group.add(stalk);
-      
-      const knob = new THREE.Mesh(fiberKnobGeo, fiberMat);
-      knob.position.copy(v).add(dir.clone().multiplyScalar(1.5));
-      group.add(knob);
-    });
+    group.add(capsidGroup);
 
     if (isCutaway && !isHologram) {
-      // DNA Core
       const dnaGeo = new THREE.TorusKnotGeometry(1.2, 0.3, 100, 16);
       const dnaMat = new THREE.MeshStandardMaterial({ color: 0xee5253, roughness: 0.3 });
-      const dna = new THREE.Mesh(dnaGeo, dnaMat);
-      group.add(dna);
+      group.add(new THREE.Mesh(dnaGeo, dnaMat));
     }
-
     return group;
   },
 
-    buildEnterovirus(mode = "surface") {
+  buildEnterovirus(mode = "surface") {
     const group = new THREE.Group();
     group.name = "enterovirus";
     const isCutaway = mode === "cutaway";
@@ -2087,6 +2123,21 @@ const VirusBuilder = {
     });
     return group;
   },
+
+  // Helper to make geometries look like organic lipid membranes or irregular proteins
+  makeOrganic(geo, amplitude = 0.2, frequency = 4) {
+    if (!geo.attributes.position) return;
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+      // Pseudo-random cellular noise using sine/cosine
+      const noise = Math.sin(v.x * frequency) * Math.cos(v.y * frequency) * Math.sin(v.z * frequency) * amplitude;
+      v.addScaledVector(v.clone().normalize(), noise);
+      pos.setXYZ(i, v.x, v.y, v.z);
+    }
+    geo.computeVertexNormals();
+  },
+
   createVirus(virusId, mode = "surface") {
     switch (virusId) {
         case "vzv": return this.buildVZV(mode);
